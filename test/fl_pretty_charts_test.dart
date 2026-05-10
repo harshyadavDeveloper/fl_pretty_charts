@@ -120,10 +120,10 @@ void main() {
   // ── BarChartData ───────────────────────────────────────────────────────────
   group('BarChartData', () {
     test('stores bars and defaults correctly', () {
-      final chartData = BarChartData(
+      const chartData = BarChartData(
         bars: [
-          const BarData(value: 10, label: 'A'),
-          const BarData(value: 20, label: 'B'),
+          BarData(value: 10, label: 'A'),
+          BarData(value: 20, label: 'B'),
         ],
       );
       expect(chartData.bars.length, equals(2));
@@ -133,8 +133,8 @@ void main() {
     });
 
     test('accepts custom maxY and minY', () {
-      final chartData = BarChartData(
-        bars: [const BarData(value: 50, label: 'X')],
+      const chartData = BarChartData(
+        bars: [BarData(value: 50, label: 'X')],
         maxY: 200.0,
         minY: 10.0,
       );
@@ -218,14 +218,14 @@ void main() {
   group('FlBarChart widget', () {
     testWidgets('renders without error', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: Scaffold(
             body: FlBarChart(
               data: BarChartData(
                 bars: [
-                  const BarData(value: 30, label: 'Mon'),
-                  const BarData(value: 80, label: 'Tue'),
-                  const BarData(value: 55, label: 'Wed'),
+                  BarData(value: 30, label: 'Mon'),
+                  BarData(value: 80, label: 'Tue'),
+                  BarData(value: 55, label: 'Wed'),
                 ],
               ),
             ),
@@ -240,10 +240,10 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: FlBarChart(
-              data: BarChartData(
+              data: const BarChartData(
                 bars: [
-                  const BarData(value: 100, label: 'A'),
-                  const BarData(value: 200, label: 'B'),
+                  BarData(value: 100, label: 'A'),
+                  BarData(value: 200, label: 'B'),
                 ],
               ),
               animation: ChartAnimation.elegant(),
@@ -259,9 +259,9 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: FlBarChart(
-              data: BarChartData(
+              data: const BarChartData(
                 bars: [
-                  const BarData(value: 50, label: 'X'),
+                  BarData(value: 50, label: 'X'),
                 ],
               ),
               animation: ChartAnimation.none(),
@@ -279,11 +279,11 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: FlBarChart(
-              data: BarChartData(
+              data: const BarChartData(
                 bars: [
-                  const BarData(value: 30, label: 'Mon'),
-                  const BarData(value: 80, label: 'Tue'),
-                  const BarData(value: 55, label: 'Wed'),
+                  BarData(value: 30, label: 'Mon'),
+                  BarData(value: 80, label: 'Tue'),
+                  BarData(value: 55, label: 'Wed'),
                 ],
               ),
               animation: ChartAnimation.none(),

@@ -187,5 +187,5 @@ class BarChartData {
     this.tooltipStyle = const TooltipStyle(),
     this.maxY,
     this.minY = 0,
-  }) : assert(bars.length > 0, 'BarChartData.bars must not be empty');
+  });
 }
