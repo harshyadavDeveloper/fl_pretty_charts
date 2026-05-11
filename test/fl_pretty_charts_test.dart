@@ -583,8 +583,7 @@ void main() {
                 ],
               ),
               animation: ChartAnimation.none(),
-              onPointTapped: (point, lineIndex, pointIndex) {
-              },
+              onPointTapped: (point, lineIndex, pointIndex) {},
             ),
           ),
         ),
