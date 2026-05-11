@@ -566,7 +566,6 @@ void main() {
     });
 
     testWidgets('onPointTapped callback is accepted by widget', (tester) async {
-      bool callbackRegistered = false;
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -585,7 +584,6 @@ void main() {
               ),
               animation: ChartAnimation.none(),
               onPointTapped: (point, lineIndex, pointIndex) {
-                callbackRegistered = true;
               },
             ),
           ),
