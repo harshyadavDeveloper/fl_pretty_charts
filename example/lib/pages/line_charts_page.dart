@@ -191,7 +191,7 @@ class _LineChartsPageState extends State<LineChartsPage> {
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.06),
+                  color: Colors.black.withOpacity(0.06),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),
@@ -211,10 +211,10 @@ class _LineChartsPageState extends State<LineChartsPage> {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: const Color(0xFF26A69A).withValues(alpha: 0.1),
+        color: const Color(0xFF26A69A).withOpacity(0.1),
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
-          color: const Color(0xFF26A69A).withValues(alpha: 0.3),
+          color: const Color(0xFF26A69A).withOpacity(0.3),
         ),
       ),
       child: Row(
