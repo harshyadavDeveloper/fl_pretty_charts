@@ -297,4 +297,334 @@ void main() {
       expect(tappedIndex, isNotNull);
     });
   });
+
+  // ── LinePoint ──────────────────────────────────────────────────────────────
+  group('LinePoint', () {
+    test('stores x, y and label correctly', () {
+      const point = LinePoint(x: 0, y: 42.0, label: 'Jan');
+      expect(point.x, equals(0));
+      expect(point.y, equals(42.0));
+      expect(point.label, equals('Jan'));
+    });
+  });
+
+  // ── LineStyle ──────────────────────────────────────────────────────────────
+  group('LineStyle', () {
+    test('has correct defaults', () {
+      const style = LineStyle();
+      expect(style.color, equals(const Color(0xFF5C6BC0)));
+      expect(style.strokeWidth, equals(3.0));
+      expect(style.showFill, isTrue);
+      expect(style.fillOpacity, equals(0.2));
+      expect(style.showDots, isTrue);
+      expect(style.dotRadius, equals(4.5));
+      expect(style.smooth, isTrue);
+      expect(style.gradient, isNull);
+    });
+
+    test('accepts custom values', () {
+      const style = LineStyle(
+        strokeWidth: 5.0,
+        smooth: false,
+        showFill: false,
+        showDots: false,
+        dotRadius: 8.0,
+        fillOpacity: 0.5,
+      );
+      expect(style.strokeWidth, equals(5.0));
+      expect(style.smooth, isFalse);
+      expect(style.showFill, isFalse);
+      expect(style.showDots, isFalse);
+      expect(style.dotRadius, equals(8.0));
+      expect(style.fillOpacity, equals(0.5));
+    });
+  });
+
+  // ── LineData ───────────────────────────────────────────────────────────────
+  group('LineData', () {
+    test('stores points and label correctly', () {
+      const data = LineData(
+        points: [
+          LinePoint(x: 0, y: 10, label: 'A'),
+          LinePoint(x: 1, y: 20, label: 'B'),
+        ],
+        label: 'Revenue',
+      );
+      expect(data.points.length, equals(2));
+      expect(data.label, equals('Revenue'));
+    });
+
+    test('uses default LineStyle when not provided', () {
+      const data = LineData(
+        points: [LinePoint(x: 0, y: 10, label: 'A')],
+        label: 'Test',
+      );
+      expect(data.style.strokeWidth, equals(3.0));
+      expect(data.style.smooth, isTrue);
+    });
+
+    test('accepts custom LineStyle', () {
+      const data = LineData(
+        points: [LinePoint(x: 0, y: 10, label: 'A')],
+        label: 'Test',
+        style: LineStyle(color: Colors.red, strokeWidth: 4.0),
+      );
+      expect(data.style.color, equals(Colors.red));
+      expect(data.style.strokeWidth, equals(4.0));
+    });
+  });
+
+  // ── AxisLineStyle ──────────────────────────────────────────────────────────
+  group('AxisLineStyle', () {
+    test('has correct defaults', () {
+      const style = AxisLineStyle();
+      expect(style.showGrid, isTrue);
+      expect(style.yAxisDivisions, equals(5));
+      expect(style.gridOpacity, equals(0.2));
+    });
+
+    test('accepts custom values', () {
+      const style = AxisLineStyle(
+        showGrid: false,
+        yAxisDivisions: 3,
+        gridOpacity: 0.5,
+      );
+      expect(style.showGrid, isFalse);
+      expect(style.yAxisDivisions, equals(3));
+      expect(style.gridOpacity, equals(0.5));
+    });
+  });
+
+  // ── LineTooltipStyle ───────────────────────────────────────────────────────
+  group('LineTooltipStyle', () {
+    test('has correct defaults', () {
+      const style = LineTooltipStyle();
+      expect(style.borderRadius, equals(6.0));
+      expect(style.backgroundColor, equals(const Color(0xDD000000)));
+    });
+  });
+
+  // ── LineChartData ──────────────────────────────────────────────────────────
+  group('LineChartData', () {
+    test('stores lines and defaults correctly', () {
+      const data = LineChartData(
+        lines: [
+          LineData(
+            points: [
+              LinePoint(x: 0, y: 10, label: 'A'),
+              LinePoint(x: 1, y: 20, label: 'B'),
+            ],
+            label: 'Series 1',
+          ),
+        ],
+      );
+      expect(data.lines.length, equals(1));
+      expect(data.minY, equals(0.0));
+      expect(data.maxY, isNull);
+    });
+
+    test('stores multiple line series', () {
+      const data = LineChartData(
+        lines: [
+          LineData(
+            points: [LinePoint(x: 0, y: 10, label: 'A')],
+            label: 'Series 1',
+          ),
+          LineData(
+            points: [LinePoint(x: 0, y: 20, label: 'A')],
+            label: 'Series 2',
+          ),
+        ],
+      );
+      expect(data.lines.length, equals(2));
+      expect(data.lines[0].label, equals('Series 1'));
+      expect(data.lines[1].label, equals('Series 2'));
+    });
+
+    test('accepts custom maxY and minY', () {
+      const data = LineChartData(
+        lines: [
+          LineData(
+            points: [LinePoint(x: 0, y: 50, label: 'X')],
+            label: 'Test',
+          ),
+        ],
+        maxY: 200.0,
+        minY: 10.0,
+      );
+      expect(data.maxY, equals(200.0));
+      expect(data.minY, equals(10.0));
+    });
+  });
+
+  // ── FlLineChart Widget ─────────────────────────────────────────────────────
+  group('FlLineChart widget', () {
+    testWidgets('renders single line without error', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: FlLineChart(
+              data: LineChartData(
+                lines: [
+                  LineData(
+                    points: [
+                      LinePoint(x: 0, y: 30, label: 'Jan'),
+                      LinePoint(x: 1, y: 80, label: 'Feb'),
+                      LinePoint(x: 2, y: 55, label: 'Mar'),
+                    ],
+                    label: 'Revenue',
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+      expect(find.byType(FlLineChart), findsOneWidget);
+    });
+
+    testWidgets('renders multi-line without error', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: FlLineChart(
+              data: LineChartData(
+                lines: [
+                  LineData(
+                    points: [
+                      LinePoint(x: 0, y: 30, label: 'Jan'),
+                      LinePoint(x: 1, y: 60, label: 'Feb'),
+                    ],
+                    label: 'Revenue',
+                    style: LineStyle(color: Color(0xFF5C6BC0)),
+                  ),
+                  LineData(
+                    points: [
+                      LinePoint(x: 0, y: 20, label: 'Jan'),
+                      LinePoint(x: 1, y: 40, label: 'Feb'),
+                    ],
+                    label: 'Expenses',
+                    style: LineStyle(color: Color(0xFFFF7043)),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+      expect(find.byType(FlLineChart), findsOneWidget);
+    });
+
+    testWidgets('renders with no animation', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlLineChart(
+              data: const LineChartData(
+                lines: [
+                  LineData(
+                    points: [
+                      LinePoint(x: 0, y: 50, label: 'A'),
+                      LinePoint(x: 1, y: 80, label: 'B'),
+                    ],
+                    label: 'Test',
+                  ),
+                ],
+              ),
+              animation: ChartAnimation.none(),
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+      expect(find.byType(FlLineChart), findsOneWidget);
+    });
+
+    testWidgets('renders straight lines without error', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: FlLineChart(
+              data: LineChartData(
+                lines: [
+                  LineData(
+                    points: [
+                      LinePoint(x: 0, y: 40, label: 'Q1'),
+                      LinePoint(x: 1, y: 70, label: 'Q2'),
+                      LinePoint(x: 2, y: 90, label: 'Q3'),
+                    ],
+                    label: 'Target',
+                    style: LineStyle(smooth: false, showFill: false),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+      expect(find.byType(FlLineChart), findsOneWidget);
+    });
+
+    testWidgets('onPointTapped callback is accepted by widget', (tester) async {
+      bool callbackRegistered = false;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlLineChart(
+              data: const LineChartData(
+                lines: [
+                  LineData(
+                    points: [
+                      LinePoint(x: 0, y: 30, label: 'Jan'),
+                      LinePoint(x: 1, y: 80, label: 'Feb'),
+                      LinePoint(x: 2, y: 55, label: 'Mar'),
+                    ],
+                    label: 'Revenue',
+                  ),
+                ],
+              ),
+              animation: ChartAnimation.none(),
+              onPointTapped: (point, lineIndex, pointIndex) {
+                callbackRegistered = true;
+              },
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      // Widget renders correctly with callback attached
+      expect(find.byType(FlLineChart), findsOneWidget);
+    });
+
+    testWidgets('FlLineChart renders with custom height and decoration',
+        (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlLineChart(
+              data: const LineChartData(
+                lines: [
+                  LineData(
+                    points: [
+                      LinePoint(x: 0, y: 30, label: 'Jan'),
+                      LinePoint(x: 1, y: 80, label: 'Feb'),
+                    ],
+                    label: 'Revenue',
+                  ),
+                ],
+              ),
+              animation: ChartAnimation.none(),
+              height: 320,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byType(FlLineChart), findsOneWidget);
+    });
+  });
 }

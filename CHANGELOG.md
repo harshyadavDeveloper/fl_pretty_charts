@@ -5,9 +5,28 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## 0.1.0
+
+### Added
+
+- 📈 `FlLineChart` — animated line chart widget with left-to-right draw
+- `LineChartData` — main data model for line charts
+- `LineData` — single line series with points and style config
+- `LinePoint` — individual data point with x, y, and label
+- `LineStyle` — stroke width, color, gradient, fill, dots, smooth toggle
+- `AxisLineStyle` — grid and axis config for line charts
+- `LineTooltipStyle` — tooltip appearance for line charts
+- Smooth bezier curves between data points
+- Gradient area fill below each line
+- Animated left-to-right line draw
+- Dot indicators at each data point with tap highlight
+- Multi-line support — render multiple series on one chart
+- Tap-to-tooltip interaction on data points
+
 ## 0.0.1
 
 ### Added
+
 - 📊 `FlBarChart` — animated bar chart widget
 - `BarChartData` — main data model with full style configuration
 - `BarData` — single bar model with value, label, optional color override
