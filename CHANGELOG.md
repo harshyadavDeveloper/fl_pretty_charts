@@ -5,6 +5,15 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## 0.1.2
+
+### Fixed
+- Replaced `withOpacity()` with `withValues()` for Flutter 3.27+ compatibility
+- Switched CI analyze flag from `--fatal-infos` to `--fatal-warnings`
+- Bumped Flutter version in all CI/CD workflows to 3.27.0
+
+---
+
 ## 0.1.1
 
 ### Fixed
