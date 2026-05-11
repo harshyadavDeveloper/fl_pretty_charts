@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'bar_charts_page.dart';
 import 'line_charts_page.dart';
+import 'pie_charts_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -28,15 +29,24 @@ class _HomePageState extends State<HomePage> {
         destinations: const [
           NavigationDestination(
             icon: Icon(Icons.bar_chart),
-            label: 'Bar Charts',
+            label: 'Bar',
           ),
           NavigationDestination(
             icon: Icon(Icons.show_chart),
-            label: 'Line Charts',
+            label: 'Line',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.pie_chart),
+            label: 'Pie',
           ),
         ],
       ),
-      body: _currentTab == 0 ? const BarChartsPage() : const LineChartsPage(),
+      body: switch (_currentTab) {
+        0 => const BarChartsPage(),
+        1 => const LineChartsPage(),
+        2 => const PieChartsPage(),
+        _ => const BarChartsPage(),
+      },
     );
   }
 }

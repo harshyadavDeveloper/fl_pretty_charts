@@ -5,9 +5,31 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## 0.5.0
+
+### Added
+
+- 🥧 `FlPieChart` — animated pie and donut chart widget
+- `PieChartData` — main data model with full style configuration
+- `PieSegment` — single segment with value, label, color, optional gradient
+- `LegendStyle` — configurable legend with position, dot size, spacing
+- `CenterLabelStyle` — title + value label for donut center
+- `PieTooltipStyle` — tooltip appearance configuration
+- Donut variant via `PieChartData.donut = true`
+- Configurable inner radius via `donutRadius`
+- Tap-to-expand segments with glow highlight effect
+- Legend tap to highlight/deselect segments
+- Animated opacity on unselected legend items
+- Percentage display in legend labels
+- Configurable segment gap and start angle
+- Full dartdoc on all public APIs
+
+---
+
 ## 0.1.2
 
 ### Fixed
+
 - Replaced `withOpacity()` with `withValues()` for Flutter 3.27+ compatibility
 - Switched CI analyze flag from `--fatal-infos` to `--fatal-warnings`
 - Bumped Flutter version in all CI/CD workflows to 3.27.0

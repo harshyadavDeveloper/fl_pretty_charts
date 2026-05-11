@@ -624,4 +624,303 @@ void main() {
       expect(find.byType(FlLineChart), findsOneWidget);
     });
   });
+
+  // ── PieSegment ─────────────────────────────────────────────────────────────
+  group('PieSegment', () {
+    test('stores value, label and color correctly', () {
+      const segment = PieSegment(
+        value: 40,
+        label: 'Flutter',
+        color: Color(0xFF5C6BC0),
+      );
+      expect(segment.value, equals(40));
+      expect(segment.label, equals('Flutter'));
+      expect(segment.color, equals(const Color(0xFF5C6BC0)));
+      expect(segment.gradient, isNull);
+    });
+
+    test('accepts optional gradient', () {
+      const segment = PieSegment(
+        value: 30,
+        label: 'React',
+        color: Color(0xFF26A69A),
+        gradient: SweepGradient(
+          colors: [Color(0xFF26A69A), Color(0xFF5C6BC0)],
+        ),
+      );
+      expect(segment.gradient, isNotNull);
+    });
+  });
+
+  // ── LegendStyle ────────────────────────────────────────────────────────────
+  group('LegendStyle', () {
+    test('has correct defaults', () {
+      const style = LegendStyle();
+      expect(style.show, isTrue);
+      expect(style.position, equals(LegendPosition.bottom));
+      expect(style.dotSize, equals(10.0));
+      expect(style.spacing, equals(16.0));
+    });
+
+    test('accepts custom values', () {
+      const style = LegendStyle(
+        show: false,
+        dotSize: 14.0,
+        spacing: 24.0,
+        position: LegendPosition.top,
+      );
+      expect(style.show, isFalse);
+      expect(style.dotSize, equals(14.0));
+      expect(style.spacing, equals(24.0));
+      expect(style.position, equals(LegendPosition.top));
+    });
+  });
+
+  // ── CenterLabelStyle ───────────────────────────────────────────────────────
+  group('CenterLabelStyle', () {
+    test('has correct defaults', () {
+      const style = CenterLabelStyle();
+      expect(style.title, isNull);
+      expect(style.value, isNull);
+    });
+
+    test('accepts title and value', () {
+      const style = CenterLabelStyle(
+        title: 'Total',
+        value: '1,250',
+      );
+      expect(style.title, equals('Total'));
+      expect(style.value, equals('1,250'));
+    });
+  });
+
+  // ── PieTooltipStyle ────────────────────────────────────────────────────────
+  group('PieTooltipStyle', () {
+    test('has correct defaults', () {
+      const style = PieTooltipStyle();
+      expect(style.borderRadius, equals(6.0));
+      expect(style.backgroundColor, equals(const Color(0xDD000000)));
+    });
+  });
+
+  // ── PieChartData ───────────────────────────────────────────────────────────
+  group('PieChartData', () {
+    test('stores segments and defaults correctly', () {
+      const data = PieChartData(
+        segments: [
+          PieSegment(value: 40, label: 'A', color: Color(0xFF5C6BC0)),
+          PieSegment(value: 60, label: 'B', color: Color(0xFF26A69A)),
+        ],
+      );
+      expect(data.segments.length, equals(2));
+      expect(data.donut, isFalse);
+      expect(data.donutRadius, equals(0.55));
+      expect(data.segmentGap, equals(1.5));
+      expect(data.expandOffset, equals(10.0));
+      expect(data.startAngle, equals(-90));
+    });
+
+    test('donut mode stores correct values', () {
+      const data = PieChartData(
+        segments: [
+          PieSegment(value: 50, label: 'A', color: Color(0xFF5C6BC0)),
+          PieSegment(value: 50, label: 'B', color: Color(0xFF26A69A)),
+        ],
+        donut: true,
+        donutRadius: 0.6,
+      );
+      expect(data.donut, isTrue);
+      expect(data.donutRadius, equals(0.6));
+    });
+
+    test('accepts custom segmentGap and expandOffset', () {
+      const data = PieChartData(
+        segments: [
+          PieSegment(value: 100, label: 'A', color: Colors.blue),
+        ],
+        segmentGap: 4.0,
+        expandOffset: 16.0,
+      );
+      expect(data.segmentGap, equals(4.0));
+      expect(data.expandOffset, equals(16.0));
+    });
+
+    test('accepts centerLabel in donut mode', () {
+      const data = PieChartData(
+        segments: [
+          PieSegment(value: 100, label: 'A', color: Colors.blue),
+        ],
+        donut: true,
+        centerLabel: CenterLabelStyle(title: 'Total', value: '100'),
+      );
+      expect(data.centerLabel, isNotNull);
+      expect(data.centerLabel!.title, equals('Total'));
+      expect(data.centerLabel!.value, equals('100'));
+    });
+
+    test('accepts custom startAngle', () {
+      const data = PieChartData(
+        segments: [
+          PieSegment(value: 100, label: 'A', color: Colors.blue),
+        ],
+        startAngle: 0,
+      );
+      expect(data.startAngle, equals(0));
+    });
+  });
+
+  // ── FlPieChart Widget ──────────────────────────────────────────────────────
+  group('FlPieChart widget', () {
+    testWidgets('renders basic pie chart without error', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: FlPieChart(
+              data: PieChartData(
+                segments: [
+                  PieSegment(value: 40, label: 'A', color: Color(0xFF5C6BC0)),
+                  PieSegment(value: 30, label: 'B', color: Color(0xFF26A69A)),
+                  PieSegment(value: 30, label: 'C', color: Color(0xFFFF7043)),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+      expect(find.byType(FlPieChart), findsOneWidget);
+    });
+
+    testWidgets('renders donut chart without error', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: FlPieChart(
+              data: PieChartData(
+                segments: [
+                  PieSegment(value: 50, label: 'A', color: Color(0xFF5C6BC0)),
+                  PieSegment(value: 50, label: 'B', color: Color(0xFF26A69A)),
+                ],
+                donut: true,
+                donutRadius: 0.55,
+                centerLabel: CenterLabelStyle(
+                  title: 'Total',
+                  value: '100',
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      expect(find.byType(FlPieChart), findsOneWidget);
+    });
+
+    testWidgets('renders with no animation', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlPieChart(
+              data: const PieChartData(
+                segments: [
+                  PieSegment(value: 60, label: 'A', color: Color(0xFF5C6BC0)),
+                  PieSegment(value: 40, label: 'B', color: Color(0xFF26A69A)),
+                ],
+              ),
+              animation: ChartAnimation.none(),
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+      expect(find.byType(FlPieChart), findsOneWidget);
+    });
+
+    testWidgets('renders legend when show is true', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: SingleChildScrollView(
+              child: FlPieChart(
+                data: PieChartData(
+                  segments: [
+                    PieSegment(
+                        value: 40, label: 'Flutter', color: Color(0xFF5C6BC0)),
+                    PieSegment(
+                        value: 60, label: 'React', color: Color(0xFF26A69A)),
+                  ],
+                  legendStyle: LegendStyle(show: true),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Flutter (40.0%)'), findsOneWidget);
+      expect(find.text('React (60.0%)'), findsOneWidget);
+    });
+
+    testWidgets('does not render legend when show is false', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: FlPieChart(
+              data: PieChartData(
+                segments: [
+                  PieSegment(
+                      value: 40, label: 'Flutter', color: Color(0xFF5C6BC0)),
+                  PieSegment(
+                      value: 60, label: 'React', color: Color(0xFF26A69A)),
+                ],
+                legendStyle: LegendStyle(show: false),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Flutter (40.0%)'), findsNothing);
+      expect(find.text('React (60.0%)'), findsNothing);
+    });
+
+    testWidgets('onSegmentTapped callback is accepted by widget',
+        (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlPieChart(
+              data: const PieChartData(
+                segments: [
+                  PieSegment(value: 40, label: 'A', color: Color(0xFF5C6BC0)),
+                  PieSegment(value: 60, label: 'B', color: Color(0xFF26A69A)),
+                ],
+              ),
+              animation: ChartAnimation.none(),
+              onSegmentTapped: (segment, index) {},
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byType(FlPieChart), findsOneWidget);
+    });
+
+    testWidgets('renders with elegant animation', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlPieChart(
+              data: const PieChartData(
+                segments: [
+                  PieSegment(value: 40, label: 'A', color: Color(0xFF5C6BC0)),
+                  PieSegment(value: 60, label: 'B', color: Color(0xFF26A69A)),
+                ],
+              ),
+              animation: ChartAnimation.elegant(),
+            ),
+          ),
+        ),
+      );
+      expect(find.byType(FlPieChart), findsOneWidget);
+    });
+  });
 }
