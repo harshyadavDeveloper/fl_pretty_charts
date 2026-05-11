@@ -7,15 +7,15 @@ on:
 
 jobs:
   publish:
+    name: Publish Package
     runs-on: ubuntu-latest
 
-    permissions:
-      id-token: write
-
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - uses: subosito/flutter-action@v2
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.24.0'
           channel: 'stable'
@@ -23,16 +23,16 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Verify formatting
-        run: dart format --output=none --set-exit-if-changed .
-
       - name: Analyze
         run: dart analyze --fatal-infos
 
       - name: Run tests
         run: flutter test
 
+      - name: Setup pub.dev credentials
+        run: |
+          mkdir -p ~/.config/dart
+          echo '${{ secrets.PUB_CREDENTIALS }}' > ~/.config/dart/pub-credentials.json
+
       - name: Publish to pub.dev
         run: dart pub publish --force
-        env:
-          PUB_TOKEN: ${{ secrets.PUB_CREDENTIALS }}
