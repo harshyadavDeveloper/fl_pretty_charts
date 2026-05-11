@@ -5,6 +5,13 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## 0.1.1
+
+### Fixed
+
+- Improved CI/CD pipeline with pub-credentials.json based publishing
+- Updated publish workflow for more reliable pub.dev deployment
+
 ## 0.1.0
 
 ### Added
