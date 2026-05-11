@@ -146,15 +146,15 @@ class BarChartPainter extends CustomPainter {
         final color = bar.color ?? data.defaultColor;
         barPaint = Paint()
           ..color = selectedIndex == i
-              ? color.withOpacity(1.0)
-              : color.withOpacity(0.85)
+              ? color.withValues(alpha: 1.0)
+              : color.withValues(alpha: 0.85)
           ..style = PaintingStyle.fill;
       }
 
       // Highlight selected bar with a slight glow
       if (selectedIndex == i) {
         final glowPaint = Paint()
-          ..color = (bar.color ?? data.defaultColor).withOpacity(0.18)
+          ..color = (bar.color ?? data.defaultColor).withValues(alpha: 0.18)
           ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8);
         canvas.drawRRect(rrect, glowPaint);
       }

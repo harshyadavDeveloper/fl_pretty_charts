@@ -175,8 +175,8 @@ class LineChartPainter extends CustomPainter {
       final fillPaint = Paint()
         ..shader = LinearGradient(
           colors: [
-            style.color.withOpacity(style.fillOpacity),
-            style.color.withOpacity(0.0),
+            style.color.withValues(alpha: style.fillOpacity),
+            style.color.withValues(alpha: 0.0),
           ],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
@@ -217,7 +217,7 @@ class LineChartPainter extends CustomPainter {
 
         // Outer ring
         final outerPaint = Paint()
-          ..color = style.color.withOpacity(0.25)
+          ..color = style.color.withValues(alpha: 0.25)
           ..style = PaintingStyle.fill;
         canvas.drawCircle(o, isSelected ? style.dotRadius + 4 : 0, outerPaint);
 

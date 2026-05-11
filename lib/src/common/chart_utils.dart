@@ -65,7 +65,7 @@ class ChartUtils {
   /// [color] and [opacity] come from [AxisStyle.gridColor] and
   /// [AxisStyle.gridOpacity].
   static Paint gridPaint(Color color, double opacity) => Paint()
-    ..color = color.withOpacity(opacity)
+    ..color = color.withValues(alpha: opacity)
     ..strokeWidth = 1.0
     ..style = PaintingStyle.stroke;
 

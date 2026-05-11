@@ -104,10 +104,10 @@ class _BarChartsPageState extends State<BarChartsPage> {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: const Color(0xFF5C6BC0).withOpacity( 0.1),
+        color: const Color(0xFF5C6BC0).withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
-          color: const Color(0xFF5C6BC0).withOpacity(0.3),
+          color: const Color(0xFF5C6BC0).withValues(alpha: 0.3),
         ),
       ),
       child: Row(
