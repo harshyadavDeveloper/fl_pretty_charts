@@ -923,4 +923,374 @@ void main() {
       expect(find.byType(FlPieChart), findsOneWidget);
     });
   });
+  // ── RadarDatasetStyle ──────────────────────────────────────────────────────
+  group('RadarDatasetStyle', () {
+    test('has correct defaults', () {
+      const style = RadarDatasetStyle();
+      expect(style.color, equals(const Color(0xFF5C6BC0)));
+      expect(style.strokeWidth, equals(2.5));
+      expect(style.fillOpacity, equals(0.25));
+      expect(style.showDots, isTrue);
+      expect(style.dotRadius, equals(4.0));
+    });
+
+    test('accepts custom values', () {
+      const style = RadarDatasetStyle(
+        color: Colors.red,
+        strokeWidth: 4.0,
+        fillOpacity: 0.5,
+        showDots: false,
+        dotRadius: 6.0,
+      );
+      expect(style.color, equals(Colors.red));
+      expect(style.strokeWidth, equals(4.0));
+      expect(style.fillOpacity, equals(0.5));
+      expect(style.showDots, isFalse);
+      expect(style.dotRadius, equals(6.0));
+    });
+  });
+
+  // ── RadarDataset ───────────────────────────────────────────────────────────
+  group('RadarDataset', () {
+    test('stores values and label correctly', () {
+      const dataset = RadarDataset(
+        values: [80, 90, 70, 85, 60],
+        label: 'Hero A',
+      );
+      expect(dataset.values.length, equals(5));
+      expect(dataset.label, equals('Hero A'));
+      expect(dataset.values[0], equals(80));
+      expect(dataset.values[4], equals(60));
+    });
+
+    test('uses default style when not provided', () {
+      const dataset = RadarDataset(
+        values: [50, 60, 70],
+        label: 'Test',
+      );
+      expect(dataset.style.strokeWidth, equals(2.5));
+      expect(dataset.style.showDots, isTrue);
+    });
+
+    test('accepts custom style', () {
+      const dataset = RadarDataset(
+        values: [50, 60, 70],
+        label: 'Test',
+        style: RadarDatasetStyle(
+          color: Colors.purple,
+          strokeWidth: 3.5,
+        ),
+      );
+      expect(dataset.style.color, equals(Colors.purple));
+      expect(dataset.style.strokeWidth, equals(3.5));
+    });
+  });
+
+  // ── RadarGridStyle ─────────────────────────────────────────────────────────
+  group('RadarGridStyle', () {
+    test('has correct defaults', () {
+      const style = RadarGridStyle();
+      expect(style.showGrid, isTrue);
+      expect(style.gridLevels, equals(5));
+      expect(style.gridOpacity, equals(0.25));
+      expect(style.spokeOpacity, equals(0.3));
+    });
+
+    test('accepts custom values', () {
+      const style = RadarGridStyle(
+        showGrid: false,
+        gridLevels: 3,
+        gridOpacity: 0.5,
+        spokeOpacity: 0.6,
+      );
+      expect(style.showGrid, isFalse);
+      expect(style.gridLevels, equals(3));
+      expect(style.gridOpacity, equals(0.5));
+      expect(style.spokeOpacity, equals(0.6));
+    });
+  });
+
+  // ── RadarLegendStyle ───────────────────────────────────────────────────────
+  group('RadarLegendStyle', () {
+    test('has correct defaults', () {
+      const style = RadarLegendStyle();
+      expect(style.show, isTrue);
+      expect(style.dotSize, equals(10.0));
+      expect(style.spacing, equals(16.0));
+    });
+
+    test('accepts custom values', () {
+      const style = RadarLegendStyle(
+        show: false,
+        dotSize: 14.0,
+        spacing: 24.0,
+      );
+      expect(style.show, isFalse);
+      expect(style.dotSize, equals(14.0));
+      expect(style.spacing, equals(24.0));
+    });
+  });
+
+  // ── RadarChartData ─────────────────────────────────────────────────────────
+  group('RadarChartData', () {
+    test('stores labels and datasets correctly', () {
+      const data = RadarChartData(
+        labels: ['Speed', 'Power', 'Agility', 'Defense', 'Stamina'],
+        datasets: [
+          RadarDataset(
+            values: [80, 90, 70, 85, 60],
+            label: 'Hero A',
+          ),
+        ],
+      );
+      expect(data.labels.length, equals(5));
+      expect(data.datasets.length, equals(1));
+      expect(data.maxValue, equals(100.0));
+      expect(data.minValue, equals(0.0));
+    });
+
+    test('stores multiple datasets correctly', () {
+      const data = RadarChartData(
+        labels: ['A', 'B', 'C', 'D'],
+        datasets: [
+          RadarDataset(values: [50, 60, 70, 80], label: 'Series 1'),
+          RadarDataset(values: [80, 70, 60, 50], label: 'Series 2'),
+        ],
+      );
+      expect(data.datasets.length, equals(2));
+      expect(data.datasets[0].label, equals('Series 1'));
+      expect(data.datasets[1].label, equals('Series 2'));
+    });
+
+    test('accepts custom maxValue and minValue', () {
+      const data = RadarChartData(
+        labels: ['A', 'B', 'C'],
+        datasets: [
+          RadarDataset(values: [50, 60, 70], label: 'Test'),
+        ],
+        maxValue: 200.0,
+        minValue: 10.0,
+      );
+      expect(data.maxValue, equals(200.0));
+      expect(data.minValue, equals(10.0));
+    });
+
+    test('accepts custom grid and legend styles', () {
+      const data = RadarChartData(
+        labels: ['A', 'B', 'C'],
+        datasets: [
+          RadarDataset(values: [50, 60, 70], label: 'Test'),
+        ],
+        gridStyle: RadarGridStyle(gridLevels: 3, showGrid: false),
+        legendStyle: RadarLegendStyle(show: false),
+      );
+      expect(data.gridStyle.gridLevels, equals(3));
+      expect(data.gridStyle.showGrid, isFalse);
+      expect(data.legendStyle.show, isFalse);
+    });
+  });
+
+  // ── FlRadarChart Widget ────────────────────────────────────────────────────
+  group('FlRadarChart widget', () {
+    testWidgets('renders single dataset without error', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: FlRadarChart(
+              data: RadarChartData(
+                labels: ['Speed', 'Power', 'Agility', 'Defense', 'Stamina'],
+                datasets: [
+                  RadarDataset(
+                    values: [80, 90, 70, 85, 60],
+                    label: 'Hero A',
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+      expect(find.byType(FlRadarChart), findsOneWidget);
+    });
+
+    testWidgets('renders multi-dataset without error', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: FlRadarChart(
+              data: RadarChartData(
+                labels: ['Speed', 'Power', 'Agility', 'Defense', 'Stamina'],
+                datasets: [
+                  RadarDataset(
+                    values: [80, 90, 70, 85, 60],
+                    label: 'Hero A',
+                    style: RadarDatasetStyle(color: Color(0xFF5C6BC0)),
+                  ),
+                  RadarDataset(
+                    values: [60, 70, 85, 60, 90],
+                    label: 'Hero B',
+                    style: RadarDatasetStyle(color: Color(0xFF26A69A)),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+      expect(find.byType(FlRadarChart), findsOneWidget);
+    });
+
+    testWidgets('renders with no animation', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlRadarChart(
+              data: const RadarChartData(
+                labels: ['A', 'B', 'C', 'D', 'E'],
+                datasets: [
+                  RadarDataset(
+                    values: [60, 70, 80, 90, 50],
+                    label: 'Test',
+                  ),
+                ],
+              ),
+              animation: ChartAnimation.none(),
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+      expect(find.byType(FlRadarChart), findsOneWidget);
+    });
+
+    testWidgets('renders legend when show is true', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: SingleChildScrollView(
+              child: FlRadarChart(
+                data: RadarChartData(
+                  labels: ['A', 'B', 'C', 'D', 'E'],
+                  datasets: [
+                    RadarDataset(
+                      values: [60, 70, 80, 90, 50],
+                      label: 'Hero A',
+                    ),
+                    RadarDataset(
+                      values: [80, 60, 70, 50, 90],
+                      label: 'Hero B',
+                    ),
+                  ],
+                  legendStyle: RadarLegendStyle(show: true),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Hero A'), findsOneWidget);
+      expect(find.text('Hero B'), findsOneWidget);
+    });
+
+    testWidgets('does not render legend when show is false', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: FlRadarChart(
+              data: RadarChartData(
+                labels: ['A', 'B', 'C', 'D', 'E'],
+                datasets: [
+                  RadarDataset(
+                    values: [60, 70, 80, 90, 50],
+                    label: 'Hero A',
+                  ),
+                ],
+                legendStyle: RadarLegendStyle(show: false),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Hero A'), findsNothing);
+    });
+
+    testWidgets('renders with elegant animation', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlRadarChart(
+              data: const RadarChartData(
+                labels: ['A', 'B', 'C', 'D', 'E'],
+                datasets: [
+                  RadarDataset(
+                    values: [60, 70, 80, 90, 50],
+                    label: 'Test',
+                  ),
+                ],
+              ),
+              animation: ChartAnimation.elegant(),
+            ),
+          ),
+        ),
+      );
+      expect(find.byType(FlRadarChart), findsOneWidget);
+    });
+
+    testWidgets('onDatasetTapped callback is accepted by widget',
+        (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlRadarChart(
+              data: const RadarChartData(
+                labels: ['A', 'B', 'C', 'D', 'E'],
+                datasets: [
+                  RadarDataset(
+                    values: [60, 70, 80, 90, 50],
+                    label: 'Test',
+                  ),
+                ],
+              ),
+              animation: ChartAnimation.none(),
+              onDatasetTapped: (dataset, index) {},
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byType(FlRadarChart), findsOneWidget);
+    });
+
+    testWidgets('renders with 8 axes without error', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: FlRadarChart(
+              data: RadarChartData(
+                labels: [
+                  'Jan',
+                  'Feb',
+                  'Mar',
+                  'Apr',
+                  'May',
+                  'Jun',
+                  'Jul',
+                  'Aug',
+                ],
+                datasets: [
+                  RadarDataset(
+                    values: [65, 80, 55, 90, 70, 85, 60, 75],
+                    label: 'Monthly',
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+      expect(find.byType(FlRadarChart), findsOneWidget);
+    });
+  });
 }

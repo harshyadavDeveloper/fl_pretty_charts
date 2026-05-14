@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'bar_charts_page.dart';
 import 'line_charts_page.dart';
 import 'pie_charts_page.dart';
+import 'radar_charts_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -39,12 +40,17 @@ class _HomePageState extends State<HomePage> {
             icon: Icon(Icons.pie_chart),
             label: 'Pie',
           ),
+          NavigationDestination(
+            icon: Icon(Icons.radar),
+            label: 'Radar',
+          ),
         ],
       ),
       body: switch (_currentTab) {
         0 => const BarChartsPage(),
         1 => const LineChartsPage(),
         2 => const PieChartsPage(),
+        3 => const RadarChartsPage(),
         _ => const BarChartsPage(),
       },
     );

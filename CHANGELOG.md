@@ -5,6 +5,27 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## 0.9.0
+
+### Added
+- 🕸️ `FlRadarChart` — animated radar/spider chart widget
+- `RadarChartData` — main data model with labels, datasets, and style config
+- `RadarDataset` — single data series with values, label, and style
+- `RadarDatasetStyle` — stroke, fill opacity, dot radius configuration
+- `RadarGridStyle` — concentric polygon grid, spoke lines, axis labels
+- `RadarLegendStyle` — legend with dot size and spacing config
+- Multi-dataset support — overlay multiple series on one chart
+- Animated polygon reveal from center outward
+- Concentric polygon grid rings with configurable levels
+- Axis spoke lines from center to each label
+- Axis labels with smart quadrant-based nudging
+- Tap-to-highlight datasets with opacity fade on others
+- Legend tap to highlight/deselect datasets
+- Dot indicators at each data point
+- Full dartdoc on all public APIs
+
+---
+
 ## 0.5.0
 
 ### Added
