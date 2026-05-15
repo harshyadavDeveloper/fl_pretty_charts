@@ -6,19 +6,21 @@
 [![popularity](https://img.shields.io/pub/popularity/fl_pretty_charts)](https://pub.dev/packages/fl_pretty_charts)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/harshyadavDeveloper/fl_pretty_charts/blob/main/LICENSE)
 
-A beautiful, animated Flutter charts package. Zero external dependencies — built entirely with Flutter's `CustomPainter`.
+A beautiful, animated Flutter charts package with zero external dependencies — built entirely with Flutter's `CustomPainter`.
 
 ---
 
 ## ✨ Features
 
-- 📊 **Bar Chart** — animated, customizable, interactive
-- 🎨 **Gradients & custom colors** — per-bar or global
+- 📊 **Bar Chart** — animated, gradient, per-bar colors, tap tooltips
+- 📈 **Line Chart** — smooth bezier curves, gradient fill, multi-line
+- 🥧 **Pie Chart** — animated sweep, donut variant, center label
+- 🕸️ **Radar Chart** — spider/radar, multi-dataset comparison
 - 💫 **Smooth animations** — elegant, snappy, bouncy, or none
-- 👆 **Interactive tooltips** — tap any bar to reveal its value
+- 🎨 **Theming system** — apply a palette across all charts in one line
+- 🏷️ **Standalone LegendWidget** — reusable anywhere in your layout
+- 👆 **Interactive** — tap bars, points, segments, datasets
 - 🎯 **Zero dependencies** — pure Flutter, no third-party packages
-- 📐 **Grid lines & axis labels** — clean, configurable
-- 🌈 **Built-in themes** — default, ocean, sunset, forest
 - 🔒 **Null safe** — Dart 3.x, Flutter 3.10+
 
 ---
@@ -29,7 +31,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  fl_pretty_charts: ^0.0.1
+  fl_pretty_charts: ^1.0.0
 ```
 
 Then run:
@@ -44,7 +46,13 @@ flutter pub get
 
 ```dart
 import 'package:fl_pretty_charts/fl_pretty_charts.dart';
+```
 
+---
+
+## 📊 Bar Chart
+
+```dart
 FlBarChart(
   data: BarChartData(
     bars: [
@@ -55,25 +63,8 @@ FlBarChart(
       BarData(value: 40, label: 'Fri'),
     ],
   ),
-)
-```
-
----
-
-## 📊 Bar Chart
-
-### Basic usage
-
-```dart
-FlBarChart(
-  data: BarChartData(
-    bars: [
-      BarData(value: 120, label: 'Q1'),
-      BarData(value: 200, label: 'Q2'),
-      BarData(value: 170, label: 'Q3'),
-      BarData(value: 240, label: 'Q4'),
-    ],
-  ),
+  animation: ChartAnimation.elegant(),
+  onBarTapped: (bar, index) => print('${bar.label}: ${bar.value}'),
 )
 ```
 
@@ -82,15 +73,9 @@ FlBarChart(
 ```dart
 FlBarChart(
   data: BarChartData(
-    bars: [
-      BarData(value: 120, label: 'Q1'),
-      BarData(value: 200, label: 'Q2'),
-      BarData(value: 170, label: 'Q3'),
-      BarData(value: 240, label: 'Q4'),
-    ],
+    bars: [...],
     barStyle: BarStyle(
       borderRadius: 12,
-      barWidthFraction: 0.5,
       gradient: LinearGradient(
         colors: [Color(0xFF5C6BC0), Color(0xFF26A69A)],
         begin: Alignment.bottomCenter,
@@ -98,40 +83,255 @@ FlBarChart(
       ),
     ),
   ),
+)
+```
+
+### API — `FlBarChart`
+
+| Property | Type | Default | Description |
+|---|---|---|---|
+| `data` | `BarChartData` | required | Chart data and styles |
+| `animation` | `ChartAnimation` | `ChartAnimation()` | Reveal animation |
+| `theme` | `ChartTheme?` | null | Color theme override |
+| `height` | `double` | `260.0` | Canvas height |
+| `decoration` | `BoxDecoration?` | null | Container decoration |
+| `padding` | `EdgeInsets` | `all(16)` | Outer padding |
+| `onBarTapped` | `Function?` | null | Tap callback |
+
+### API — `BarChartData`
+
+| Property | Type | Default | Description |
+|---|---|---|---|
+| `bars` | `List<BarData>` | required | The bars to display |
+| `defaultColor` | `Color` | indigo | Fallback bar color |
+| `barStyle` | `BarStyle` | `BarStyle()` | Bar appearance |
+| `axisStyle` | `AxisStyle` | `AxisStyle()` | Axis and grid |
+| `tooltipStyle` | `TooltipStyle` | `TooltipStyle()` | Tooltip appearance |
+| `maxY` | `double?` | auto | Fixed max y value |
+| `minY` | `double` | `0.0` | Fixed min y value |
+
+---
+
+## 📈 Line Chart
+
+```dart
+FlLineChart(
+  data: LineChartData(
+    lines: [
+      LineData(
+        points: [
+          LinePoint(x: 0, y: 30, label: 'Jan'),
+          LinePoint(x: 1, y: 80, label: 'Feb'),
+          LinePoint(x: 2, y: 55, label: 'Mar'),
+        ],
+        label: 'Revenue',
+        style: LineStyle(color: Color(0xFF5C6BC0)),
+      ),
+    ],
+  ),
   animation: ChartAnimation.elegant(),
-  height: 300,
 )
 ```
 
-### With per-bar colors
+### Multi-line
 
 ```dart
-FlBarChart(
-  data: BarChartData(
-    bars: [
-      BarData(value: 45, label: 'Jan', color: Colors.red),
-      BarData(value: 72, label: 'Feb', color: Colors.purple),
-      BarData(value: 60, label: 'Mar', color: Colors.blue),
+FlLineChart(
+  data: LineChartData(
+    lines: [
+      LineData(points: [...], label: 'Revenue',
+        style: LineStyle(color: Color(0xFF5C6BC0))),
+      LineData(points: [...], label: 'Expenses',
+        style: LineStyle(color: Color(0xFFFF7043))),
     ],
   ),
 )
 ```
 
-### With tap callback
+### API — `FlLineChart`
+
+| Property | Type | Default | Description |
+|---|---|---|---|
+| `data` | `LineChartData` | required | Chart data and styles |
+| `animation` | `ChartAnimation` | `ChartAnimation()` | Reveal animation |
+| `theme` | `ChartTheme?` | null | Color theme override |
+| `height` | `double` | `260.0` | Canvas height |
+| `decoration` | `BoxDecoration?` | null | Container decoration |
+| `padding` | `EdgeInsets` | `all(16)` | Outer padding |
+| `onPointTapped` | `Function?` | null | Tap callback |
+
+### API — `LineStyle`
+
+| Property | Type | Default | Description |
+|---|---|---|---|
+| `color` | `Color` | indigo | Line stroke color |
+| `strokeWidth` | `double` | `3.0` | Line stroke width |
+| `gradient` | `LinearGradient?` | null | Gradient stroke |
+| `showFill` | `bool` | `true` | Area fill below line |
+| `fillOpacity` | `double` | `0.2` | Fill opacity |
+| `showDots` | `bool` | `true` | Dot indicators |
+| `dotRadius` | `double` | `4.5` | Dot radius |
+| `smooth` | `bool` | `true` | Bezier curves |
+
+---
+
+## 🥧 Pie / Donut Chart
 
 ```dart
-FlBarChart(
-  data: BarChartData(
-    bars: [
-      BarData(value: 30, label: 'Mon'),
-      BarData(value: 80, label: 'Tue'),
+// Pie chart
+FlPieChart(
+  data: PieChartData(
+    segments: [
+      PieSegment(value: 40, label: 'Flutter', color: Color(0xFF5C6BC0)),
+      PieSegment(value: 30, label: 'React',   color: Color(0xFF26A69A)),
+      PieSegment(value: 20, label: 'Vue',     color: Color(0xFFFFCA28)),
+      PieSegment(value: 10, label: 'Other',   color: Color(0xFFEF5350)),
     ],
   ),
-  onBarTapped: (bar, index) {
-    print('Tapped ${bar.label}: ${bar.value}');
-  },
+)
+
+// Donut chart
+FlPieChart(
+  data: PieChartData(
+    segments: [...],
+    donut: true,
+    donutRadius: 0.55,
+    centerLabel: CenterLabelStyle(
+      title: 'Total',
+      value: '1,250',
+    ),
+  ),
 )
 ```
+
+### API — `FlPieChart`
+
+| Property | Type | Default | Description |
+|---|---|---|---|
+| `data` | `PieChartData` | required | Chart data and styles |
+| `animation` | `ChartAnimation` | `ChartAnimation()` | Reveal animation |
+| `theme` | `ChartTheme?` | null | Color theme override |
+| `size` | `double` | `260.0` | Canvas size |
+| `decoration` | `BoxDecoration?` | null | Container decoration |
+| `padding` | `EdgeInsets` | `all(16)` | Outer padding |
+| `onSegmentTapped` | `Function?` | null | Tap callback |
+
+### API — `PieChartData`
+
+| Property | Type | Default | Description |
+|---|---|---|---|
+| `segments` | `List<PieSegment>` | required | Segments to display |
+| `donut` | `bool` | `false` | Enable donut mode |
+| `donutRadius` | `double` | `0.55` | Inner hole fraction |
+| `segmentGap` | `double` | `1.5` | Gap between segments |
+| `expandOffset` | `double` | `10.0` | Tap expand distance |
+| `legendStyle` | `LegendStyle` | `LegendStyle()` | Legend config |
+| `centerLabel` | `CenterLabelStyle?` | null | Donut center label |
+| `startAngle` | `double` | `-90` | Start angle degrees |
+
+---
+
+## 🕸️ Radar Chart
+
+```dart
+FlRadarChart(
+  data: RadarChartData(
+    labels: ['Speed', 'Power', 'Agility', 'Defense', 'Stamina'],
+    datasets: [
+      RadarDataset(
+        values: [80, 90, 70, 85, 60],
+        label: 'Hero A',
+        style: RadarDatasetStyle(color: Color(0xFF5C6BC0)),
+      ),
+      RadarDataset(
+        values: [60, 70, 85, 60, 90],
+        label: 'Hero B',
+        style: RadarDatasetStyle(color: Color(0xFF26A69A)),
+      ),
+    ],
+  ),
+  animation: ChartAnimation.elegant(),
+)
+```
+
+### API — `FlRadarChart`
+
+| Property | Type | Default | Description |
+|---|---|---|---|
+| `data` | `RadarChartData` | required | Chart data and styles |
+| `animation` | `ChartAnimation` | `ChartAnimation()` | Reveal animation |
+| `theme` | `ChartTheme?` | null | Color theme override |
+| `size` | `double` | `280.0` | Canvas size |
+| `decoration` | `BoxDecoration?` | null | Container decoration |
+| `padding` | `EdgeInsets` | `all(16)` | Outer padding |
+| `onDatasetTapped` | `Function?` | null | Tap callback |
+
+### API — `RadarDatasetStyle`
+
+| Property | Type | Default | Description |
+|---|---|---|---|
+| `color` | `Color` | indigo | Stroke and fill color |
+| `strokeWidth` | `double` | `2.5` | Polygon stroke width |
+| `fillOpacity` | `double` | `0.25` | Fill area opacity |
+| `showDots` | `bool` | `true` | Dot indicators |
+| `dotRadius` | `double` | `4.0` | Dot radius |
+
+---
+
+## 🎨 Theming
+
+Apply a consistent color palette across all chart types:
+
+```dart
+// Built-in themes
+ChartTheme.defaultTheme() // indigo, teal, amber, orange, purple
+ChartTheme.ocean()        // cool blue-green palette
+ChartTheme.sunset()       // warm reds, oranges, pinks
+ChartTheme.forest()       // nature-inspired greens
+
+// Apply to any chart
+FlBarChart(data: myData, theme: ChartTheme.ocean())
+FlLineChart(data: myData, theme: ChartTheme.sunset())
+FlPieChart(data: myData, theme: ChartTheme.forest())
+FlRadarChart(data: myData, theme: ChartTheme.ocean())
+
+// Custom theme
+ChartTheme(
+  colors: [Colors.pink, Colors.orange, Colors.yellow],
+)
+```
+
+---
+
+## 🏷️ LegendWidget
+
+A standalone legend widget usable anywhere in your layout:
+
+```dart
+LegendWidget(
+  items: [
+    LegendItem(color: Color(0xFF5C6BC0), label: 'Revenue'),
+    LegendItem(color: Color(0xFF26A69A), label: 'Expenses'),
+    LegendItem(color: Color(0xFFFF7043), label: 'Profit'),
+  ],
+)
+
+// Square dots
+LegendWidget(
+  dotShape: BoxShape.rectangle,
+  dotSize: 12,
+  items: [...],
+)
+```
+
+| Property | Type | Default | Description |
+|---|---|---|---|
+| `items` | `List<LegendItem>` | required | Legend items |
+| `dotSize` | `double` | `10.0` | Dot indicator size |
+| `spacing` | `double` | `16.0` | Item spacing |
+| `runSpacing` | `double` | `8.0` | Row spacing |
+| `dotShape` | `BoxShape` | `circle` | Circle or rectangle |
+| `alignment` | `WrapAlignment` | `center` | Item alignment |
 
 ---
 
@@ -139,99 +339,23 @@ FlBarChart(
 
 | Preset | Duration | Curve | Best For |
 |---|---|---|---|
-| `ChartAnimation()` | 900ms | easeOutCubic | General use (default) |
-| `ChartAnimation.elegant()` | 1200ms | easeOutCubic | Dashboards, first impressions |
-| `ChartAnimation.snappy()` | 400ms | easeOutBack | Frequently updated data |
+| `ChartAnimation()` | 900ms | easeOutCubic | General use |
+| `ChartAnimation.elegant()` | 1200ms | easeOutCubic | Dashboards |
+| `ChartAnimation.snappy()` | 400ms | easeOutBack | Live data |
 | `ChartAnimation.bouncy()` | 800ms | elasticOut | Playful UIs |
 | `ChartAnimation.none()` | 0ms | — | No animation |
-
-Custom animation:
-
-```dart
-FlBarChart(
-  data: myData,
-  animation: ChartAnimation(
-    duration: Duration(milliseconds: 600),
-    curve: Curves.easeInOutQuart,
-  ),
-)
-```
-
----
-
-## 🌈 Built-in Themes
-
-```dart
-ChartTheme.defaultTheme() // indigo, teal, amber, orange, purple
-ChartTheme.ocean()        // cool blue-green palette
-ChartTheme.sunset()       // warm reds, oranges, pinks
-ChartTheme.forest()       // nature-inspired greens
-```
-
----
-
-## 📐 API Reference
-
-### `FlBarChart`
-
-| Property | Type | Default | Description |
-|---|---|---|---|
-| `data` | `BarChartData` | required | Chart data and styles |
-| `animation` | `ChartAnimation` | `ChartAnimation()` | Reveal animation config |
-| `height` | `double` | `260.0` | Chart canvas height |
-| `decoration` | `BoxDecoration?` | null | Container decoration |
-| `padding` | `EdgeInsets` | `EdgeInsets.all(16)` | Outer padding |
-| `onBarTapped` | `Function?` | null | Tap callback |
-
-### `BarChartData`
-
-| Property | Type | Default | Description |
-|---|---|---|---|
-| `bars` | `List<BarData>` | required | The bars to display |
-| `defaultColor` | `Color` | indigo | Fallback bar color |
-| `barStyle` | `BarStyle` | `BarStyle()` | Bar appearance config |
-| `axisStyle` | `AxisStyle` | `AxisStyle()` | Axis and grid config |
-| `tooltipStyle` | `TooltipStyle` | `TooltipStyle()` | Tooltip appearance |
-| `maxY` | `double?` | auto | Fixed max y value |
-| `minY` | `double` | `0.0` | Fixed min y value |
-
-### `BarData`
-
-| Property | Type | Default | Description |
-|---|---|---|---|
-| `value` | `double` | required | Bar height value |
-| `label` | `String` | required | X-axis label |
-| `color` | `Color?` | null | Per-bar color override |
-
-### `BarStyle`
-
-| Property | Type | Default | Description |
-|---|---|---|---|
-| `borderRadius` | `double` | `6.0` | Top corner radius |
-| `barWidthFraction` | `double` | `0.55` | Bar width as slot fraction |
-| `gradient` | `LinearGradient?` | null | Gradient override |
-
-### `AxisStyle`
-
-| Property | Type | Default | Description |
-|---|---|---|---|
-| `labelStyle` | `TextStyle` | grey 11px | Axis label text style |
-| `gridColor` | `Color` | grey | Grid line color |
-| `gridOpacity` | `double` | `0.2` | Grid line opacity |
-| `showGrid` | `bool` | `true` | Show/hide grid lines |
-| `yAxisDivisions` | `int` | `5` | Number of y divisions |
 
 ---
 
 ## 🗺️ Roadmap
 
-| Version | Feature |
-|---|---|
-| `0.0.1` | ✅ Bar Chart |
-| `0.1.0` | 🔜 Line Chart — smooth curves, gradient fill |
-| `0.5.0` | 🔜 Pie Chart + Donut variant |
-| `0.9.0` | 🔜 Radar / Spider Chart |
-| `1.0.0` | 🔜 Theming system, Legend widget, stable API |
+| Version | Feature | Status |
+|---|---|---|
+| `0.0.1` | Bar Chart | ✅ Done |
+| `0.1.0` | Line Chart | ✅ Done |
+| `0.5.0` | Pie + Donut Chart | ✅ Done |
+| `0.9.0` | Radar / Spider Chart | ✅ Done |
+| `1.0.0` | Theming, LegendWidget, Stable API | ✅ Done |
 
 ---
 
