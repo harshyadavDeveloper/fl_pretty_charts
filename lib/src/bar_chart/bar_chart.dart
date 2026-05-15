@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'bar_chart_data.dart';
 import 'bar_chart_painter.dart';
 import '../common/chart_animation.dart';
+import '../common/chart_theme.dart';
 import '../common/chart_utils.dart';
 
 /// A beautiful, animated bar chart widget.
@@ -69,6 +70,10 @@ class FlBarChart extends StatefulWidget {
   /// Receives the tapped [BarData] and its index.
   final void Function(BarData bar, int index)? onBarTapped;
 
+  /// Optional theme that overrides [BarChartData.defaultColor].
+  /// The first color in [ChartTheme.colors] is used as the bar color.
+  final ChartTheme? theme;
+
   const FlBarChart({
     super.key,
     required this.data,
@@ -77,6 +82,7 @@ class FlBarChart extends StatefulWidget {
     this.decoration,
     this.padding = const EdgeInsets.all(16),
     this.onBarTapped,
+    this.theme,
   });
 
   @override
@@ -152,7 +158,17 @@ class _FlBarChartState extends State<FlBarChart>
               return CustomPaint(
                 size: _chartSize,
                 painter: BarChartPainter(
-                  data: widget.data,
+                  data: widget.theme != null
+                      ? BarChartData(
+                          bars: widget.data.bars,
+                          defaultColor: widget.theme!.colorAt(0),
+                          barStyle: widget.data.barStyle,
+                          axisStyle: widget.data.axisStyle,
+                          tooltipStyle: widget.data.tooltipStyle,
+                          maxY: widget.data.maxY,
+                          minY: widget.data.minY,
+                        )
+                      : widget.data,
                   animationProgress: animationValue,
                   selectedIndex: _selectedIndex,
                   maxY: _maxY,

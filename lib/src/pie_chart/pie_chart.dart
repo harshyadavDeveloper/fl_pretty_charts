@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'pie_chart_data.dart';
 import 'pie_chart_painter.dart';
 import '../common/chart_animation.dart';
+import '../common/chart_theme.dart';
 
 /// A beautiful, animated pie and donut chart widget.
 ///
@@ -56,6 +57,10 @@ class FlPieChart extends StatefulWidget {
   /// Receives the tapped [PieSegment] and its index.
   final void Function(PieSegment segment, int index)? onSegmentTapped;
 
+  /// Optional theme that overrides each segment color in order.
+  /// [ChartTheme.colorAt(i)] is applied to segment at index i.
+  final ChartTheme? theme;
+
   const FlPieChart({
     super.key,
     required this.data,
@@ -64,6 +69,7 @@ class FlPieChart extends StatefulWidget {
     this.padding = const EdgeInsets.all(16),
     this.decoration,
     this.onSegmentTapped,
+    this.theme,
   });
 
   @override
@@ -142,7 +148,26 @@ class _FlPieChartState extends State<FlPieChart>
                   return CustomPaint(
                     size: _chartSize,
                     painter: PieChartPainter(
-                      data: widget.data,
+                      data: widget.theme != null
+                          ? PieChartData(
+                              segments: List.generate(
+                                widget.data.segments.length,
+                                (i) => PieSegment(
+                                  value: widget.data.segments[i].value,
+                                  label: widget.data.segments[i].label,
+                                  color: widget.theme!.colorAt(i),
+                                ),
+                              ),
+                              donut: widget.data.donut,
+                              donutRadius: widget.data.donutRadius,
+                              segmentGap: widget.data.segmentGap,
+                              expandOffset: widget.data.expandOffset,
+                              legendStyle: widget.data.legendStyle,
+                              centerLabel: widget.data.centerLabel,
+                              tooltipStyle: widget.data.tooltipStyle,
+                              startAngle: widget.data.startAngle,
+                            )
+                          : widget.data,
                       animationProgress: animationValue,
                       selectedIndex: _selectedIndex,
                     ),
@@ -188,7 +213,9 @@ class _FlPieChartState extends State<FlPieChart>
                   width: style.dotSize,
                   height: style.dotSize,
                   decoration: BoxDecoration(
-                    color: segment.color,
+                    color: widget.theme != null
+                        ? widget.theme!.colorAt(i)
+                        : segment.color,
                     shape: BoxShape.circle,
                   ),
                 ),

@@ -1293,4 +1293,253 @@ void main() {
       expect(find.byType(FlRadarChart), findsOneWidget);
     });
   });
+
+  // ── LegendItem ─────────────────────────────────────────────────────────────
+  group('LegendItem', () {
+    test('stores color and label correctly', () {
+      const item = LegendItem(
+        color: Color(0xFF5C6BC0),
+        label: 'Revenue',
+      );
+      expect(item.color, equals(const Color(0xFF5C6BC0)));
+      expect(item.label, equals('Revenue'));
+      expect(item.textStyle, isNull);
+    });
+
+    test('accepts optional textStyle', () {
+      const item = LegendItem(
+        color: Colors.red,
+        label: 'Expenses',
+        textStyle: TextStyle(fontWeight: FontWeight.bold),
+      );
+      expect(item.textStyle, isNotNull);
+      expect(item.textStyle!.fontWeight, equals(FontWeight.bold));
+    });
+  });
+
+  // ── LegendWidget ───────────────────────────────────────────────────────────
+  group('LegendWidget', () {
+    test('has correct defaults', () {
+      const widget = LegendWidget(items: []);
+      expect(widget.dotSize, equals(10.0));
+      expect(widget.spacing, equals(16.0));
+      expect(widget.runSpacing, equals(8.0));
+      expect(widget.alignment, equals(WrapAlignment.center));
+      expect(widget.dotShape, equals(BoxShape.circle));
+    });
+
+    testWidgets('renders all legend items', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: LegendWidget(
+              items: [
+                LegendItem(color: Color(0xFF5C6BC0), label: 'Revenue'),
+                LegendItem(color: Color(0xFF26A69A), label: 'Expenses'),
+                LegendItem(color: Color(0xFFFF7043), label: 'Profit'),
+              ],
+            ),
+          ),
+        ),
+      );
+      expect(find.text('Revenue'), findsOneWidget);
+      expect(find.text('Expenses'), findsOneWidget);
+      expect(find.text('Profit'), findsOneWidget);
+    });
+
+    testWidgets('renders with empty items list', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: LegendWidget(items: []),
+          ),
+        ),
+      );
+      expect(find.byType(LegendWidget), findsOneWidget);
+    });
+
+    testWidgets('renders with square dot shape', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: LegendWidget(
+              dotShape: BoxShape.rectangle,
+              dotSize: 12,
+              items: [
+                LegendItem(color: Color(0xFF5C6BC0), label: 'Series 1'),
+                LegendItem(color: Color(0xFF26A69A), label: 'Series 2'),
+              ],
+            ),
+          ),
+        ),
+      );
+      expect(find.text('Series 1'), findsOneWidget);
+      expect(find.text('Series 2'), findsOneWidget);
+    });
+
+    testWidgets('renders with custom spacing and alignment', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: LegendWidget(
+              spacing: 24,
+              runSpacing: 12,
+              alignment: WrapAlignment.start,
+              items: [
+                LegendItem(color: Colors.blue, label: 'A'),
+                LegendItem(color: Colors.red, label: 'B'),
+              ],
+            ),
+          ),
+        ),
+      );
+      expect(find.text('A'), findsOneWidget);
+      expect(find.text('B'), findsOneWidget);
+    });
+
+    testWidgets('renders with per-item textStyle override', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: LegendWidget(
+              items: [
+                LegendItem(
+                  color: Colors.blue,
+                  label: 'Bold Item',
+                  textStyle: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
+                LegendItem(
+                  color: Colors.red,
+                  label: 'Normal Item',
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+      expect(find.text('Bold Item'), findsOneWidget);
+      expect(find.text('Normal Item'), findsOneWidget);
+    });
+  });
+
+  // ── ChartTheme integration ─────────────────────────────────────────────────
+  group('ChartTheme integration', () {
+    testWidgets('FlBarChart applies theme color', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlBarChart(
+              data: const BarChartData(
+                bars: [
+                  BarData(value: 30, label: 'A'),
+                  BarData(value: 60, label: 'B'),
+                ],
+              ),
+              theme: ChartTheme.ocean(),
+              animation: ChartAnimation.none(),
+            ),
+          ),
+        ),
+      );
+      expect(find.byType(FlBarChart), findsOneWidget);
+    });
+
+    testWidgets('FlLineChart applies theme colors to series', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlLineChart(
+              data: const LineChartData(
+                lines: [
+                  LineData(
+                    points: [
+                      LinePoint(x: 0, y: 30, label: 'A'),
+                      LinePoint(x: 1, y: 60, label: 'B'),
+                    ],
+                    label: 'Series 1',
+                  ),
+                  LineData(
+                    points: [
+                      LinePoint(x: 0, y: 20, label: 'A'),
+                      LinePoint(x: 1, y: 40, label: 'B'),
+                    ],
+                    label: 'Series 2',
+                  ),
+                ],
+              ),
+              theme: ChartTheme.sunset(),
+              animation: ChartAnimation.none(),
+            ),
+          ),
+        ),
+      );
+      expect(find.byType(FlLineChart), findsOneWidget);
+    });
+
+    testWidgets('FlPieChart applies theme colors to segments', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlPieChart(
+              data: const PieChartData(
+                segments: [
+                  PieSegment(value: 40, label: 'A', color: Colors.grey),
+                  PieSegment(value: 60, label: 'B', color: Colors.grey),
+                ],
+              ),
+              theme: ChartTheme.forest(),
+              animation: ChartAnimation.none(),
+            ),
+          ),
+        ),
+      );
+      expect(find.byType(FlPieChart), findsOneWidget);
+    });
+
+    testWidgets('FlRadarChart applies theme colors to datasets',
+        (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlRadarChart(
+              data: const RadarChartData(
+                labels: ['A', 'B', 'C', 'D', 'E'],
+                datasets: [
+                  RadarDataset(
+                    values: [60, 70, 80, 90, 50],
+                    label: 'Series 1',
+                  ),
+                  RadarDataset(
+                    values: [80, 60, 70, 50, 90],
+                    label: 'Series 2',
+                  ),
+                ],
+              ),
+              theme: ChartTheme.ocean(),
+              animation: ChartAnimation.none(),
+            ),
+          ),
+        ),
+      );
+      expect(find.byType(FlRadarChart), findsOneWidget);
+    });
+
+    test('ChartTheme.colorAt wraps correctly for all presets', () {
+      for (final theme in [
+        ChartTheme.defaultTheme(),
+        ChartTheme.ocean(),
+        ChartTheme.sunset(),
+        ChartTheme.forest(),
+      ]) {
+        expect(theme.colorAt(0), equals(theme.colors.first));
+        expect(
+          theme.colorAt(theme.colors.length),
+          equals(theme.colors.first),
+        );
+      }
+    });
+  });
 }

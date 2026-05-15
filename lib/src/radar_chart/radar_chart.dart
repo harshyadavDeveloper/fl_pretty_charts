@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'radar_chart_data.dart';
 import 'radar_chart_painter.dart';
 import '../common/chart_animation.dart';
+import '../common/chart_theme.dart';
 
 /// A beautiful, animated radar/spider chart widget.
 ///
@@ -66,6 +67,10 @@ class FlRadarChart extends StatefulWidget {
   /// Receives the tapped [RadarDataset] and its index.
   final void Function(RadarDataset dataset, int index)? onDatasetTapped;
 
+  /// Optional theme that overrides each dataset color in order.
+  /// [ChartTheme.colorAt(i)] is applied to dataset at index i.
+  final ChartTheme? theme;
+
   const FlRadarChart({
     super.key,
     required this.data,
@@ -74,6 +79,7 @@ class FlRadarChart extends StatefulWidget {
     this.padding = const EdgeInsets.all(16),
     this.decoration,
     this.onDatasetTapped,
+    this.theme,
   });
 
   @override
@@ -163,7 +169,33 @@ class _FlRadarChartState extends State<FlRadarChart>
                   return CustomPaint(
                     size: _chartSize,
                     painter: RadarChartPainter(
-                      data: widget.data,
+                      data: widget.theme != null
+                          ? RadarChartData(
+                              labels: widget.data.labels,
+                              datasets: List.generate(
+                                widget.data.datasets.length,
+                                (i) => RadarDataset(
+                                  values: widget.data.datasets[i].values,
+                                  label: widget.data.datasets[i].label,
+                                  style: RadarDatasetStyle(
+                                    color: widget.theme!.colorAt(i),
+                                    strokeWidth: widget
+                                        .data.datasets[i].style.strokeWidth,
+                                    fillOpacity: widget
+                                        .data.datasets[i].style.fillOpacity,
+                                    showDots:
+                                        widget.data.datasets[i].style.showDots,
+                                    dotRadius:
+                                        widget.data.datasets[i].style.dotRadius,
+                                  ),
+                                ),
+                              ),
+                              maxValue: widget.data.maxValue,
+                              minValue: widget.data.minValue,
+                              gridStyle: widget.data.gridStyle,
+                              legendStyle: widget.data.legendStyle,
+                            )
+                          : widget.data,
                       animationProgress: animationValue,
                       selectedIndex: _selectedIndex,
                     ),
@@ -209,7 +241,9 @@ class _FlRadarChartState extends State<FlRadarChart>
                   width: style.dotSize,
                   height: style.dotSize,
                   decoration: BoxDecoration(
-                    color: dataset.style.color,
+                    color: widget.theme != null
+                        ? widget.theme!.colorAt(i)
+                        : dataset.style.color,
                     shape: BoxShape.circle,
                   ),
                 ),

@@ -3,6 +3,7 @@ import 'bar_charts_page.dart';
 import 'line_charts_page.dart';
 import 'pie_charts_page.dart';
 import 'radar_charts_page.dart';
+import 'theme_demo_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -44,6 +45,10 @@ class _HomePageState extends State<HomePage> {
             icon: Icon(Icons.radar),
             label: 'Radar',
           ),
+          NavigationDestination(
+            icon: Icon(Icons.palette),
+            label: 'Themes',
+          ),
         ],
       ),
       body: switch (_currentTab) {
@@ -51,6 +56,7 @@ class _HomePageState extends State<HomePage> {
         1 => const LineChartsPage(),
         2 => const PieChartsPage(),
         3 => const RadarChartsPage(),
+        4 => const ThemeDemoPage(),
         _ => const BarChartsPage(),
       },
     );

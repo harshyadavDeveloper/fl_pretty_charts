@@ -88,27 +88,27 @@ FlBarChart(
 
 ### API — `FlBarChart`
 
-| Property | Type | Default | Description |
-|---|---|---|---|
-| `data` | `BarChartData` | required | Chart data and styles |
-| `animation` | `ChartAnimation` | `ChartAnimation()` | Reveal animation |
-| `theme` | `ChartTheme?` | null | Color theme override |
-| `height` | `double` | `260.0` | Canvas height |
-| `decoration` | `BoxDecoration?` | null | Container decoration |
-| `padding` | `EdgeInsets` | `all(16)` | Outer padding |
-| `onBarTapped` | `Function?` | null | Tap callback |
+| Property      | Type             | Default            | Description           |
+| ------------- | ---------------- | ------------------ | --------------------- |
+| `data`        | `BarChartData`   | required           | Chart data and styles |
+| `animation`   | `ChartAnimation` | `ChartAnimation()` | Reveal animation      |
+| `theme`       | `ChartTheme?`    | null               | Color theme override  |
+| `height`      | `double`         | `260.0`            | Canvas height         |
+| `decoration`  | `BoxDecoration?` | null               | Container decoration  |
+| `padding`     | `EdgeInsets`     | `all(16)`          | Outer padding         |
+| `onBarTapped` | `Function?`      | null               | Tap callback          |
 
 ### API — `BarChartData`
 
-| Property | Type | Default | Description |
-|---|---|---|---|
-| `bars` | `List<BarData>` | required | The bars to display |
-| `defaultColor` | `Color` | indigo | Fallback bar color |
-| `barStyle` | `BarStyle` | `BarStyle()` | Bar appearance |
-| `axisStyle` | `AxisStyle` | `AxisStyle()` | Axis and grid |
-| `tooltipStyle` | `TooltipStyle` | `TooltipStyle()` | Tooltip appearance |
-| `maxY` | `double?` | auto | Fixed max y value |
-| `minY` | `double` | `0.0` | Fixed min y value |
+| Property       | Type            | Default          | Description         |
+| -------------- | --------------- | ---------------- | ------------------- |
+| `bars`         | `List<BarData>` | required         | The bars to display |
+| `defaultColor` | `Color`         | indigo           | Fallback bar color  |
+| `barStyle`     | `BarStyle`      | `BarStyle()`     | Bar appearance      |
+| `axisStyle`    | `AxisStyle`     | `AxisStyle()`    | Axis and grid       |
+| `tooltipStyle` | `TooltipStyle`  | `TooltipStyle()` | Tooltip appearance  |
+| `maxY`         | `double?`       | auto             | Fixed max y value   |
+| `minY`         | `double`        | `0.0`            | Fixed min y value   |
 
 ---
 
@@ -150,28 +150,28 @@ FlLineChart(
 
 ### API — `FlLineChart`
 
-| Property | Type | Default | Description |
-|---|---|---|---|
-| `data` | `LineChartData` | required | Chart data and styles |
-| `animation` | `ChartAnimation` | `ChartAnimation()` | Reveal animation |
-| `theme` | `ChartTheme?` | null | Color theme override |
-| `height` | `double` | `260.0` | Canvas height |
-| `decoration` | `BoxDecoration?` | null | Container decoration |
-| `padding` | `EdgeInsets` | `all(16)` | Outer padding |
-| `onPointTapped` | `Function?` | null | Tap callback |
+| Property        | Type             | Default            | Description           |
+| --------------- | ---------------- | ------------------ | --------------------- |
+| `data`          | `LineChartData`  | required           | Chart data and styles |
+| `animation`     | `ChartAnimation` | `ChartAnimation()` | Reveal animation      |
+| `theme`         | `ChartTheme?`    | null               | Color theme override  |
+| `height`        | `double`         | `260.0`            | Canvas height         |
+| `decoration`    | `BoxDecoration?` | null               | Container decoration  |
+| `padding`       | `EdgeInsets`     | `all(16)`          | Outer padding         |
+| `onPointTapped` | `Function?`      | null               | Tap callback          |
 
 ### API — `LineStyle`
 
-| Property | Type | Default | Description |
-|---|---|---|---|
-| `color` | `Color` | indigo | Line stroke color |
-| `strokeWidth` | `double` | `3.0` | Line stroke width |
-| `gradient` | `LinearGradient?` | null | Gradient stroke |
-| `showFill` | `bool` | `true` | Area fill below line |
-| `fillOpacity` | `double` | `0.2` | Fill opacity |
-| `showDots` | `bool` | `true` | Dot indicators |
-| `dotRadius` | `double` | `4.5` | Dot radius |
-| `smooth` | `bool` | `true` | Bezier curves |
+| Property      | Type              | Default | Description          |
+| ------------- | ----------------- | ------- | -------------------- |
+| `color`       | `Color`           | indigo  | Line stroke color    |
+| `strokeWidth` | `double`          | `3.0`   | Line stroke width    |
+| `gradient`    | `LinearGradient?` | null    | Gradient stroke      |
+| `showFill`    | `bool`            | `true`  | Area fill below line |
+| `fillOpacity` | `double`          | `0.2`   | Fill opacity         |
+| `showDots`    | `bool`            | `true`  | Dot indicators       |
+| `dotRadius`   | `double`          | `4.5`   | Dot radius           |
+| `smooth`      | `bool`            | `true`  | Bezier curves        |
 
 ---
 
@@ -206,28 +206,28 @@ FlPieChart(
 
 ### API — `FlPieChart`
 
-| Property | Type | Default | Description |
-|---|---|---|---|
-| `data` | `PieChartData` | required | Chart data and styles |
-| `animation` | `ChartAnimation` | `ChartAnimation()` | Reveal animation |
-| `theme` | `ChartTheme?` | null | Color theme override |
-| `size` | `double` | `260.0` | Canvas size |
-| `decoration` | `BoxDecoration?` | null | Container decoration |
-| `padding` | `EdgeInsets` | `all(16)` | Outer padding |
-| `onSegmentTapped` | `Function?` | null | Tap callback |
+| Property          | Type             | Default            | Description           |
+| ----------------- | ---------------- | ------------------ | --------------------- |
+| `data`            | `PieChartData`   | required           | Chart data and styles |
+| `animation`       | `ChartAnimation` | `ChartAnimation()` | Reveal animation      |
+| `theme`           | `ChartTheme?`    | null               | Color theme override  |
+| `size`            | `double`         | `260.0`            | Canvas size           |
+| `decoration`      | `BoxDecoration?` | null               | Container decoration  |
+| `padding`         | `EdgeInsets`     | `all(16)`          | Outer padding         |
+| `onSegmentTapped` | `Function?`      | null               | Tap callback          |
 
 ### API — `PieChartData`
 
-| Property | Type | Default | Description |
-|---|---|---|---|
-| `segments` | `List<PieSegment>` | required | Segments to display |
-| `donut` | `bool` | `false` | Enable donut mode |
-| `donutRadius` | `double` | `0.55` | Inner hole fraction |
-| `segmentGap` | `double` | `1.5` | Gap between segments |
-| `expandOffset` | `double` | `10.0` | Tap expand distance |
-| `legendStyle` | `LegendStyle` | `LegendStyle()` | Legend config |
-| `centerLabel` | `CenterLabelStyle?` | null | Donut center label |
-| `startAngle` | `double` | `-90` | Start angle degrees |
+| Property       | Type                | Default         | Description          |
+| -------------- | ------------------- | --------------- | -------------------- |
+| `segments`     | `List<PieSegment>`  | required        | Segments to display  |
+| `donut`        | `bool`              | `false`         | Enable donut mode    |
+| `donutRadius`  | `double`            | `0.55`          | Inner hole fraction  |
+| `segmentGap`   | `double`            | `1.5`           | Gap between segments |
+| `expandOffset` | `double`            | `10.0`          | Tap expand distance  |
+| `legendStyle`  | `LegendStyle`       | `LegendStyle()` | Legend config        |
+| `centerLabel`  | `CenterLabelStyle?` | null            | Donut center label   |
+| `startAngle`   | `double`            | `-90`           | Start angle degrees  |
 
 ---
 
@@ -256,25 +256,25 @@ FlRadarChart(
 
 ### API — `FlRadarChart`
 
-| Property | Type | Default | Description |
-|---|---|---|---|
-| `data` | `RadarChartData` | required | Chart data and styles |
-| `animation` | `ChartAnimation` | `ChartAnimation()` | Reveal animation |
-| `theme` | `ChartTheme?` | null | Color theme override |
-| `size` | `double` | `280.0` | Canvas size |
-| `decoration` | `BoxDecoration?` | null | Container decoration |
-| `padding` | `EdgeInsets` | `all(16)` | Outer padding |
-| `onDatasetTapped` | `Function?` | null | Tap callback |
+| Property          | Type             | Default            | Description           |
+| ----------------- | ---------------- | ------------------ | --------------------- |
+| `data`            | `RadarChartData` | required           | Chart data and styles |
+| `animation`       | `ChartAnimation` | `ChartAnimation()` | Reveal animation      |
+| `theme`           | `ChartTheme?`    | null               | Color theme override  |
+| `size`            | `double`         | `280.0`            | Canvas size           |
+| `decoration`      | `BoxDecoration?` | null               | Container decoration  |
+| `padding`         | `EdgeInsets`     | `all(16)`          | Outer padding         |
+| `onDatasetTapped` | `Function?`      | null               | Tap callback          |
 
 ### API — `RadarDatasetStyle`
 
-| Property | Type | Default | Description |
-|---|---|---|---|
-| `color` | `Color` | indigo | Stroke and fill color |
-| `strokeWidth` | `double` | `2.5` | Polygon stroke width |
-| `fillOpacity` | `double` | `0.25` | Fill area opacity |
-| `showDots` | `bool` | `true` | Dot indicators |
-| `dotRadius` | `double` | `4.0` | Dot radius |
+| Property      | Type     | Default | Description           |
+| ------------- | -------- | ------- | --------------------- |
+| `color`       | `Color`  | indigo  | Stroke and fill color |
+| `strokeWidth` | `double` | `2.5`   | Polygon stroke width  |
+| `fillOpacity` | `double` | `0.25`  | Fill area opacity     |
+| `showDots`    | `bool`   | `true`  | Dot indicators        |
+| `dotRadius`   | `double` | `4.0`   | Dot radius            |
 
 ---
 
@@ -324,37 +324,37 @@ LegendWidget(
 )
 ```
 
-| Property | Type | Default | Description |
-|---|---|---|---|
-| `items` | `List<LegendItem>` | required | Legend items |
-| `dotSize` | `double` | `10.0` | Dot indicator size |
-| `spacing` | `double` | `16.0` | Item spacing |
-| `runSpacing` | `double` | `8.0` | Row spacing |
-| `dotShape` | `BoxShape` | `circle` | Circle or rectangle |
-| `alignment` | `WrapAlignment` | `center` | Item alignment |
+| Property     | Type               | Default  | Description         |
+| ------------ | ------------------ | -------- | ------------------- |
+| `items`      | `List<LegendItem>` | required | Legend items        |
+| `dotSize`    | `double`           | `10.0`   | Dot indicator size  |
+| `spacing`    | `double`           | `16.0`   | Item spacing        |
+| `runSpacing` | `double`           | `8.0`    | Row spacing         |
+| `dotShape`   | `BoxShape`         | `circle` | Circle or rectangle |
+| `alignment`  | `WrapAlignment`    | `center` | Item alignment      |
 
 ---
 
 ## 💫 Animation Presets
 
-| Preset | Duration | Curve | Best For |
-|---|---|---|---|
-| `ChartAnimation()` | 900ms | easeOutCubic | General use |
-| `ChartAnimation.elegant()` | 1200ms | easeOutCubic | Dashboards |
-| `ChartAnimation.snappy()` | 400ms | easeOutBack | Live data |
-| `ChartAnimation.bouncy()` | 800ms | elasticOut | Playful UIs |
-| `ChartAnimation.none()` | 0ms | — | No animation |
+| Preset                     | Duration | Curve        | Best For     |
+| -------------------------- | -------- | ------------ | ------------ |
+| `ChartAnimation()`         | 900ms    | easeOutCubic | General use  |
+| `ChartAnimation.elegant()` | 1200ms   | easeOutCubic | Dashboards   |
+| `ChartAnimation.snappy()`  | 400ms    | easeOutBack  | Live data    |
+| `ChartAnimation.bouncy()`  | 800ms    | elasticOut   | Playful UIs  |
+| `ChartAnimation.none()`    | 0ms      | —            | No animation |
 
 ---
 
 ## 🗺️ Roadmap
 
-| Version | Feature | Status |
-|---|---|---|
-| `0.0.1` | Bar Chart | ✅ Done |
-| `0.1.0` | Line Chart | ✅ Done |
-| `0.5.0` | Pie + Donut Chart | ✅ Done |
-| `0.9.0` | Radar / Spider Chart | ✅ Done |
+| Version | Feature                           | Status  |
+| ------- | --------------------------------- | ------- |
+| `0.0.1` | Bar Chart                         | ✅ Done |
+| `0.1.0` | Line Chart                        | ✅ Done |
+| `0.5.0` | Pie + Donut Chart                 | ✅ Done |
+| `0.9.0` | Radar / Spider Chart              | ✅ Done |
 | `1.0.0` | Theming, LegendWidget, Stable API | ✅ Done |
 
 ---

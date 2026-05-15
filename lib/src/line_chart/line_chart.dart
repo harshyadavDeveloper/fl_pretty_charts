@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'line_chart_data.dart';
 import 'line_chart_painter.dart';
 import '../common/chart_animation.dart';
+import '../common/chart_theme.dart';
 import '../common/chart_utils.dart';
 
 /// A beautiful, animated line chart widget.
@@ -77,6 +78,10 @@ class FlLineChart extends StatefulWidget {
   final void Function(LinePoint point, int lineIndex, int pointIndex)?
       onPointTapped;
 
+  /// Optional theme that overrides each line series color in order.
+  /// [ChartTheme.colorAt(i)] is applied to line series at index i.
+  final ChartTheme? theme;
+
   const FlLineChart({
     super.key,
     required this.data,
@@ -85,6 +90,7 @@ class FlLineChart extends StatefulWidget {
     this.decoration,
     this.padding = const EdgeInsets.all(16),
     this.onPointTapped,
+    this.theme,
   });
 
   @override
@@ -181,7 +187,32 @@ class _FlLineChartState extends State<FlLineChart>
               return CustomPaint(
                 size: _chartSize,
                 painter: LineChartPainter(
-                  data: widget.data,
+                  data: widget.theme != null
+                      ? LineChartData(
+                          lines: List.generate(
+                            widget.data.lines.length,
+                            (i) => LineData(
+                              points: widget.data.lines[i].points,
+                              label: widget.data.lines[i].label,
+                              style: LineStyle(
+                                color: widget.theme!.colorAt(i),
+                                strokeWidth:
+                                    widget.data.lines[i].style.strokeWidth,
+                                showFill: widget.data.lines[i].style.showFill,
+                                fillOpacity:
+                                    widget.data.lines[i].style.fillOpacity,
+                                showDots: widget.data.lines[i].style.showDots,
+                                dotRadius: widget.data.lines[i].style.dotRadius,
+                                smooth: widget.data.lines[i].style.smooth,
+                              ),
+                            ),
+                          ),
+                          axisStyle: widget.data.axisStyle,
+                          tooltipStyle: widget.data.tooltipStyle,
+                          maxY: widget.data.maxY,
+                          minY: widget.data.minY,
+                        )
+                      : widget.data,
                   animationProgress: animationValue,
                   selectedLineIndex: _selectedLineIndex,
                   selectedPointIndex: _selectedPointIndex,

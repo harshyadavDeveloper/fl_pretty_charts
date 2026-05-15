@@ -5,9 +5,35 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## 1.0.0 — Stable Release 🎉
+
+### Added
+
+- 🎨 `ChartTheme` integration across all 4 chart widgets
+  - `FlBarChart(theme: ChartTheme.ocean())` — overrides bar color
+  - `FlLineChart(theme: ChartTheme.sunset())` — overrides line series colors
+  - `FlPieChart(theme: ChartTheme.forest())` — overrides segment colors
+  - `FlRadarChart(theme: ChartTheme.defaultTheme())` — overrides dataset colors
+- 🏷️ `LegendWidget` — standalone reusable legend widget
+  - `LegendItem` — single color + label item
+  - Configurable dot size, spacing, alignment, shape
+  - Per-item text style override
+- All 4 chart types stable and production ready
+- Full backward compatibility — no breaking changes
+
+### Charts Included
+
+- ✅ `FlBarChart` — animated bar chart with tap tooltips
+- ✅ `FlLineChart` — smooth bezier line chart, multi-line
+- ✅ `FlPieChart` — animated pie and donut chart
+- ✅ `FlRadarChart` — radar/spider chart, multi-dataset
+
+---
+
 ## 0.9.0
 
 ### Added
+
 - 🕸️ `FlRadarChart` — animated radar/spider chart widget
 - `RadarChartData` — main data model with labels, datasets, and style config
 - `RadarDataset` — single data series with values, label, and style
