@@ -53,6 +53,8 @@ library fl_pretty_charts;
 export 'src/bar_chart/bar_chart.dart';
 export 'src/bar_chart/bar_chart_data.dart';
 export 'src/bar_chart/bar_chart_painter.dart';
+export 'src/bar_chart/horizontal_bar_chart.dart';
+export 'src/bar_chart/horizontal_bar_chart_painter.dart';
 
 // ── Line Chart ─────────────────────────────────────────────────────────────
 export 'src/line_chart/line_chart.dart';

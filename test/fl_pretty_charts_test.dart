@@ -1542,4 +1542,219 @@ void main() {
       }
     });
   });
+
+  // ── FlHorizontalBarChart Widget ────────────────────────────────────────────
+  group('FlHorizontalBarChart widget', () {
+    testWidgets('renders without error', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: FlHorizontalBarChart(
+              data: BarChartData(
+                bars: [
+                  BarData(value: 80, label: 'Flutter'),
+                  BarData(value: 65, label: 'React'),
+                  BarData(value: 50, label: 'Vue'),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+      expect(find.byType(FlHorizontalBarChart), findsOneWidget);
+    });
+
+    testWidgets('renders with elegant animation', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlHorizontalBarChart(
+              data: const BarChartData(
+                bars: [
+                  BarData(value: 80, label: 'Flutter'),
+                  BarData(value: 65, label: 'React'),
+                ],
+              ),
+              animation: ChartAnimation.elegant(),
+            ),
+          ),
+        ),
+      );
+      expect(find.byType(FlHorizontalBarChart), findsOneWidget);
+    });
+
+    testWidgets('renders with no animation', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlHorizontalBarChart(
+              data: const BarChartData(
+                bars: [
+                  BarData(value: 80, label: 'Flutter'),
+                  BarData(value: 65, label: 'React'),
+                ],
+              ),
+              animation: ChartAnimation.none(),
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+      expect(find.byType(FlHorizontalBarChart), findsOneWidget);
+    });
+
+    testWidgets('renders with gradient bar style', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: FlHorizontalBarChart(
+              data: BarChartData(
+                bars: [
+                  BarData(value: 80, label: 'Flutter'),
+                  BarData(value: 65, label: 'React'),
+                  BarData(value: 50, label: 'Vue'),
+                ],
+                barStyle: BarStyle(
+                  borderRadius: 10,
+                  gradient: LinearGradient(
+                    colors: [Color(0xFF5C6BC0), Color(0xFF26A69A)],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      expect(find.byType(FlHorizontalBarChart), findsOneWidget);
+    });
+
+    testWidgets('renders with per-bar colors', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: FlHorizontalBarChart(
+              data: BarChartData(
+                bars: [
+                  BarData(value: 80, label: 'A', color: Color(0xFF5C6BC0)),
+                  BarData(value: 65, label: 'B', color: Color(0xFF26A69A)),
+                  BarData(value: 50, label: 'C', color: Color(0xFFFF7043)),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+      expect(find.byType(FlHorizontalBarChart), findsOneWidget);
+    });
+
+    testWidgets('renders with custom height', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlHorizontalBarChart(
+              data: const BarChartData(
+                bars: [
+                  BarData(value: 80, label: 'Flutter'),
+                  BarData(value: 65, label: 'React'),
+                ],
+              ),
+              animation: ChartAnimation.none(),
+              height: 200,
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+      expect(find.byType(FlHorizontalBarChart), findsOneWidget);
+    });
+
+    testWidgets('renders with ChartTheme', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlHorizontalBarChart(
+              data: const BarChartData(
+                bars: [
+                  BarData(value: 80, label: 'Flutter'),
+                  BarData(value: 65, label: 'React'),
+                  BarData(value: 50, label: 'Vue'),
+                ],
+              ),
+              theme: ChartTheme.ocean(),
+              animation: ChartAnimation.none(),
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+      expect(find.byType(FlHorizontalBarChart), findsOneWidget);
+    });
+
+    testWidgets('renders with decoration', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlHorizontalBarChart(
+              data: const BarChartData(
+                bars: [
+                  BarData(value: 80, label: 'Flutter'),
+                  BarData(value: 65, label: 'React'),
+                ],
+              ),
+              animation: ChartAnimation.none(),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+      expect(find.byType(FlHorizontalBarChart), findsOneWidget);
+    });
+
+    testWidgets('onBarTapped callback is accepted by widget', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlHorizontalBarChart(
+              data: const BarChartData(
+                bars: [
+                  BarData(value: 80, label: 'Flutter'),
+                  BarData(value: 65, label: 'React'),
+                  BarData(value: 50, label: 'Vue'),
+                ],
+              ),
+              animation: ChartAnimation.none(),
+              onBarTapped: (bar, index) {},
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byType(FlHorizontalBarChart), findsOneWidget);
+    });
+
+    testWidgets('renders with maxY override', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: FlHorizontalBarChart(
+              data: BarChartData(
+                bars: [
+                  BarData(value: 80, label: 'Flutter'),
+                  BarData(value: 65, label: 'React'),
+                ],
+                maxY: 200,
+              ),
+            ),
+          ),
+        ),
+      );
+      expect(find.byType(FlHorizontalBarChart), findsOneWidget);
+    });
+  });
 }

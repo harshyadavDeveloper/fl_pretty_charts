@@ -12,7 +12,7 @@ class BarChartsPage extends StatefulWidget {
 class _BarChartsPageState extends State<BarChartsPage> {
   String _lastTapped = 'Tap any bar!';
 
-  // ── Datasets ───────────────────────────────────────────────────────────────
+  // ── Vertical Bar Datasets ──────────────────────────────────────────────────
 
   static const _weeklyData = BarChartData(
     bars: [
@@ -56,6 +56,47 @@ class _BarChartsPageState extends State<BarChartsPage> {
     axisStyle: AxisStyle(yAxisDivisions: 4, gridOpacity: 0.15),
   );
 
+  // ── Horizontal Bar Datasets ────────────────────────────────────────────────
+
+  static const _frameworkData = BarChartData(
+    bars: [
+      BarData(value: 80, label: 'Flutter'),
+      BarData(value: 65, label: 'React'),
+      BarData(value: 50, label: 'Vue'),
+      BarData(value: 40, label: 'Angular'),
+      BarData(value: 30, label: 'Svelte'),
+    ],
+  );
+
+  static const _gradientHorizontalData = BarChartData(
+    bars: [
+      BarData(value: 240, label: 'Q4'),
+      BarData(value: 170, label: 'Q3'),
+      BarData(value: 200, label: 'Q2'),
+      BarData(value: 120, label: 'Q1'),
+    ],
+    barStyle: BarStyle(
+      borderRadius: 10,
+      barWidthFraction: 0.5,
+      gradient: LinearGradient(
+        colors: [Color(0xFF5C6BC0), Color(0xFF26A69A)],
+        begin: Alignment.centerLeft,
+        end: Alignment.centerRight,
+      ),
+    ),
+  );
+
+  static const _customColorHorizontalData = BarChartData(
+    bars: [
+      BarData(value: 95, label: 'Sales', color: Color(0xFF5C6BC0)),
+      BarData(value: 72, label: 'Support', color: Color(0xFF26A69A)),
+      BarData(value: 60, label: 'Design', color: Color(0xFFFF7043)),
+      BarData(value: 45, label: 'Dev', color: Color(0xFFAB47BC)),
+      BarData(value: 38, label: 'HR', color: Color(0xFFFFCA28)),
+    ],
+    axisStyle: AxisStyle(yAxisDivisions: 4, gridOpacity: 0.15),
+  );
+
   // ── Build ──────────────────────────────────────────────────────────────────
 
   @override
@@ -64,6 +105,9 @@ class _BarChartsPageState extends State<BarChartsPage> {
       padding: const EdgeInsets.symmetric(vertical: 16),
       children: [
         _buildTapBanner(),
+
+        // ── Vertical ──────────────────────────────────────────────────────
+        _buildSectionHeader('Vertical Bar Charts'),
         ChartSection(
           title: '📊 Weekly Activity',
           subtitle: 'Default theme · Elegant animation · Tap a bar!',
@@ -90,6 +134,40 @@ class _BarChartsPageState extends State<BarChartsPage> {
           child: FlBarChart(
             data: _customColorData,
             animation: ChartAnimation.bouncy(),
+          ),
+        ),
+
+        // ── Horizontal ────────────────────────────────────────────────────
+        _buildSectionHeader('Horizontal Bar Charts'),
+        ChartSection(
+          title: '↔️ Framework Popularity',
+          subtitle: 'Horizontal bars · Elegant animation · Tap a bar!',
+          child: FlHorizontalBarChart(
+            data: _frameworkData,
+            animation: ChartAnimation.elegant(),
+            onBarTapped: (bar, index) => setState(
+              () => _lastTapped = '${bar.label}: ${bar.value.toInt()}%',
+            ),
+          ),
+        ),
+        ChartSection(
+          title: '🌈 Quarterly Revenue',
+          subtitle: 'Gradient · centerLeft → centerRight · Snappy',
+          child: FlHorizontalBarChart(
+            data: _gradientHorizontalData,
+            animation: ChartAnimation.snappy(),
+            height: 200,
+          ),
+        ),
+        ChartSection(
+          title: '🎨 Department Performance',
+          subtitle: 'Per-bar colors · Bouncy animation · Tap a bar!',
+          child: FlHorizontalBarChart(
+            data: _customColorHorizontalData,
+            animation: ChartAnimation.bouncy(),
+            onBarTapped: (bar, index) => setState(
+              () => _lastTapped = '${bar.label}: ${bar.value.toInt()}%',
+            ),
           ),
         ),
         const SizedBox(height: 32),
@@ -125,6 +203,21 @@ class _BarChartsPageState extends State<BarChartsPage> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildSectionHeader(String title) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
+      child: Text(
+        title,
+        style: const TextStyle(
+          fontSize: 13,
+          fontWeight: FontWeight.w700,
+          color: Color(0xFF9E9E9E),
+          letterSpacing: 0.5,
+        ),
       ),
     );
   }

@@ -5,6 +5,22 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## 1.1.0
+
+### Added
+- ↔️ `FlHorizontalBarChart` — animated horizontal bar chart widget
+- Bars grow left to right with smooth animation
+- Reuses all existing `BarChartData` models — zero new data classes needed
+- Gradient support via `BarStyle.gradient` (use `centerLeft` → `centerRight`)
+- Per-bar color override via `BarData.color`
+- Tap-to-tooltip interaction on each bar
+- `ChartTheme` support via `theme` parameter
+- Y-axis category labels on the left
+- Vertical grid lines with configurable divisions and opacity
+- 📸 Added chart screenshots to README
+
+---
+
 ## 1.0.0 — Stable Release 🎉
 
 ### Added
