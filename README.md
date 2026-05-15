@@ -10,6 +10,55 @@ A beautiful, animated Flutter charts package with zero external dependencies —
 
 ---
 
+## 📸 Chart Examples
+
+<table>
+  <tr>
+    <td>
+      <img src="assets/screenshots/ss1.jpg" width="150"/>
+    </td>
+    <td>
+      <img src="assets/screenshots/ss2.jpg" width="150"/>
+    </td>
+    <td>
+      <img src="assets/screenshots/ss3.jpg" width="150"/>
+    </td>
+    <td>
+      <img src="assets/screenshots/ss4.jpg" width="150"/>
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+      <img src="assets/screenshots/ss5.jpg" width="150"/>
+    </td>
+    <td>
+      <img src="assets/screenshots/ss6.jpg" width="150"/>
+    </td>
+    <td>
+      <img src="assets/screenshots/ss7.jpg" width="150"/>
+    </td>
+    <td>
+      <img src="assets/screenshots/ss8.jpg" width="150"/>
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+      <img src="assets/screenshots/ss9.jpg" width="150"/>
+    </td>
+    <td>
+      <img src="assets/screenshots/ss10.jpg" width="150"/>
+    </td>
+    <td>
+      <img src="assets/screenshots/ss11.jpg" width="150"/>
+    </td>
+    <td>
+      <img src="assets/screenshots/ss12.jpg" width="150"/>
+    </td>
+  </tr>
+</table>
+
 ## ✨ Features
 
 - 📊 **Bar Chart** — animated, gradient, per-bar colors, tap tooltips
