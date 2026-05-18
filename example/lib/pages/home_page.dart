@@ -3,6 +3,7 @@ import 'bar_charts_page.dart';
 import 'line_charts_page.dart';
 import 'pie_charts_page.dart';
 import 'radar_charts_page.dart';
+import 'area_charts_page.dart';
 import 'theme_demo_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -38,6 +39,10 @@ class _HomePageState extends State<HomePage> {
             label: 'Line',
           ),
           NavigationDestination(
+            icon: Icon(Icons.area_chart),
+            label: 'Area',
+          ),
+          NavigationDestination(
             icon: Icon(Icons.pie_chart),
             label: 'Pie',
           ),
@@ -54,9 +59,10 @@ class _HomePageState extends State<HomePage> {
       body: switch (_currentTab) {
         0 => const BarChartsPage(),
         1 => const LineChartsPage(),
-        2 => const PieChartsPage(),
-        3 => const RadarChartsPage(),
-        4 => const ThemeDemoPage(),
+        2 => const AreaChartsPage(),
+        3 => const PieChartsPage(),
+        4 => const RadarChartsPage(),
+        5 => const ThemeDemoPage(),
         _ => const BarChartsPage(),
       },
     );

@@ -5,6 +5,29 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## 1.3.0
+
+### Added
+- 📉 `FlAreaChart` — animated area chart widget
+- `AreaChartData` — main data model with series and style config
+- `AreaSeries` — single area series with points, label, and style
+- `AreaPoint` — individual data point with x, y, and label
+- `AreaSeriesStyle` — stroke, fill opacity, gradient, dots, smooth toggle
+- `AreaAxisStyle` — grid and axis configuration
+- `AreaTooltipStyle` — tooltip appearance configuration
+- Stacked mode — areas stack on top of each other via `stacked: true`
+- Smooth bezier curves between data points
+- Gradient area fill — top-to-bottom per series color
+- Custom fill gradient via `AreaSeriesStyle.fillGradient`
+- Animated left-to-right reveal
+- Dot indicators at each data point with tap highlight
+- Multi-series support with tap-to-highlight
+- Legend shown automatically for multi-series charts
+- `ChartTheme` support via `theme` parameter
+- Full dartdoc on all public APIs
+
+---
+
 ## 1.2.1
 
 ### Added

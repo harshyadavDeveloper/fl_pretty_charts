@@ -64,6 +64,11 @@ export 'src/line_chart/line_chart.dart';
 export 'src/line_chart/line_chart_data.dart';
 export 'src/line_chart/line_chart_painter.dart';
 
+// ── Area Chart ─────────────────────────────────────────────────────────────
+export 'src/area_chart/area_chart.dart';
+export 'src/area_chart/area_chart_data.dart';
+export 'src/area_chart/area_chart_painter.dart';
+
 // ── Pie Chart ──────────────────────────────────────────────────────────────
 export 'src/pie_chart/pie_chart.dart';
 export 'src/pie_chart/pie_chart_data.dart';

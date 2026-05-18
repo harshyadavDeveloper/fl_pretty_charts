@@ -2152,4 +2152,452 @@ void main() {
       expect(find.byType(FlStackedBarChart), findsOneWidget);
     });
   });
+
+  // ── AreaPoint ──────────────────────────────────────────────────────────────
+  group('AreaPoint', () {
+    test('stores x, y and label correctly', () {
+      const point = AreaPoint(x: 0, y: 42.0, label: 'Jan');
+      expect(point.x, equals(0));
+      expect(point.y, equals(42.0));
+      expect(point.label, equals('Jan'));
+    });
+  });
+
+  // ── AreaSeriesStyle ────────────────────────────────────────────────────────
+  group('AreaSeriesStyle', () {
+    test('has correct defaults', () {
+      const style = AreaSeriesStyle();
+      expect(style.color, equals(const Color(0xFF5C6BC0)));
+      expect(style.strokeWidth, equals(2.5));
+      expect(style.fillOpacity, equals(0.3));
+      expect(style.showDots, isTrue);
+      expect(style.dotRadius, equals(4.0));
+      expect(style.smooth, isTrue);
+      expect(style.fillGradient, isNull);
+    });
+
+    test('accepts custom values', () {
+      const style = AreaSeriesStyle(
+        color: Colors.red,
+        strokeWidth: 4.0,
+        fillOpacity: 0.5,
+        showDots: false,
+        dotRadius: 6.0,
+        smooth: false,
+      );
+      expect(style.color, equals(Colors.red));
+      expect(style.strokeWidth, equals(4.0));
+      expect(style.fillOpacity, equals(0.5));
+      expect(style.showDots, isFalse);
+      expect(style.dotRadius, equals(6.0));
+      expect(style.smooth, isFalse);
+    });
+
+    test('accepts custom fillGradient', () {
+      const style = AreaSeriesStyle(
+        fillGradient: LinearGradient(
+          colors: [Color(0xFF5C6BC0), Color(0xFF26A69A)],
+        ),
+      );
+      expect(style.fillGradient, isNotNull);
+    });
+  });
+
+  // ── AreaSeries ─────────────────────────────────────────────────────────────
+  group('AreaSeries', () {
+    test('stores points and label correctly', () {
+      const series = AreaSeries(
+        points: [
+          AreaPoint(x: 0, y: 10, label: 'A'),
+          AreaPoint(x: 1, y: 20, label: 'B'),
+        ],
+        label: 'Revenue',
+      );
+      expect(series.points.length, equals(2));
+      expect(series.label, equals('Revenue'));
+    });
+
+    test('uses default AreaSeriesStyle when not provided', () {
+      const series = AreaSeries(
+        points: [AreaPoint(x: 0, y: 10, label: 'A')],
+        label: 'Test',
+      );
+      expect(series.style.strokeWidth, equals(2.5));
+      expect(series.style.smooth, isTrue);
+    });
+
+    test('accepts custom AreaSeriesStyle', () {
+      const series = AreaSeries(
+        points: [AreaPoint(x: 0, y: 10, label: 'A')],
+        label: 'Test',
+        style: AreaSeriesStyle(color: Colors.red, strokeWidth: 4.0),
+      );
+      expect(series.style.color, equals(Colors.red));
+      expect(series.style.strokeWidth, equals(4.0));
+    });
+  });
+
+  // ── AreaAxisStyle ──────────────────────────────────────────────────────────
+  group('AreaAxisStyle', () {
+    test('has correct defaults', () {
+      const style = AreaAxisStyle();
+      expect(style.showGrid, isTrue);
+      expect(style.yAxisDivisions, equals(5));
+      expect(style.gridOpacity, equals(0.2));
+    });
+
+    test('accepts custom values', () {
+      const style = AreaAxisStyle(
+        showGrid: false,
+        yAxisDivisions: 3,
+        gridOpacity: 0.5,
+      );
+      expect(style.showGrid, isFalse);
+      expect(style.yAxisDivisions, equals(3));
+      expect(style.gridOpacity, equals(0.5));
+    });
+  });
+
+  // ── AreaTooltipStyle ───────────────────────────────────────────────────────
+  group('AreaTooltipStyle', () {
+    test('has correct defaults', () {
+      const style = AreaTooltipStyle();
+      expect(style.borderRadius, equals(6.0));
+      expect(style.backgroundColor, equals(const Color(0xDD000000)));
+    });
+  });
+
+  // ── AreaChartData ──────────────────────────────────────────────────────────
+  group('AreaChartData', () {
+    test('stores series and defaults correctly', () {
+      const data = AreaChartData(
+        series: [
+          AreaSeries(
+            points: [
+              AreaPoint(x: 0, y: 10, label: 'A'),
+              AreaPoint(x: 1, y: 20, label: 'B'),
+            ],
+            label: 'Series 1',
+          ),
+        ],
+      );
+      expect(data.series.length, equals(1));
+      expect(data.stacked, isFalse);
+      expect(data.minY, equals(0.0));
+      expect(data.maxY, isNull);
+    });
+
+    test('accepts stacked mode', () {
+      const data = AreaChartData(
+        series: [
+          AreaSeries(
+            points: [AreaPoint(x: 0, y: 10, label: 'A')],
+            label: 'S1',
+          ),
+          AreaSeries(
+            points: [AreaPoint(x: 0, y: 20, label: 'A')],
+            label: 'S2',
+          ),
+        ],
+        stacked: true,
+      );
+      expect(data.stacked, isTrue);
+      expect(data.series.length, equals(2));
+    });
+
+    test('accepts custom maxY and minY', () {
+      const data = AreaChartData(
+        series: [
+          AreaSeries(
+            points: [AreaPoint(x: 0, y: 50, label: 'X')],
+            label: 'Test',
+          ),
+        ],
+        maxY: 200.0,
+        minY: 10.0,
+      );
+      expect(data.maxY, equals(200.0));
+      expect(data.minY, equals(10.0));
+    });
+
+    test('stores multiple series correctly', () {
+      const data = AreaChartData(
+        series: [
+          AreaSeries(
+            points: [AreaPoint(x: 0, y: 10, label: 'A')],
+            label: 'Series 1',
+          ),
+          AreaSeries(
+            points: [AreaPoint(x: 0, y: 20, label: 'A')],
+            label: 'Series 2',
+          ),
+          AreaSeries(
+            points: [AreaPoint(x: 0, y: 30, label: 'A')],
+            label: 'Series 3',
+          ),
+        ],
+      );
+      expect(data.series.length, equals(3));
+      expect(data.series[0].label, equals('Series 1'));
+      expect(data.series[2].label, equals('Series 3'));
+    });
+  });
+
+  // ── FlAreaChart Widget ─────────────────────────────────────────────────────
+  group('FlAreaChart widget', () {
+    testWidgets('renders single series without error', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: FlAreaChart(
+              data: AreaChartData(
+                series: [
+                  AreaSeries(
+                    points: [
+                      AreaPoint(x: 0, y: 30, label: 'Jan'),
+                      AreaPoint(x: 1, y: 80, label: 'Feb'),
+                      AreaPoint(x: 2, y: 55, label: 'Mar'),
+                    ],
+                    label: 'Revenue',
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+      expect(find.byType(FlAreaChart), findsOneWidget);
+    });
+
+    testWidgets('renders multi-series without error', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: FlAreaChart(
+              data: AreaChartData(
+                series: [
+                  AreaSeries(
+                    points: [
+                      AreaPoint(x: 0, y: 30, label: 'Jan'),
+                      AreaPoint(x: 1, y: 60, label: 'Feb'),
+                    ],
+                    label: 'Revenue',
+                    style: AreaSeriesStyle(color: Color(0xFF5C6BC0)),
+                  ),
+                  AreaSeries(
+                    points: [
+                      AreaPoint(x: 0, y: 20, label: 'Jan'),
+                      AreaPoint(x: 1, y: 40, label: 'Feb'),
+                    ],
+                    label: 'Expenses',
+                    style: AreaSeriesStyle(color: Color(0xFFFF7043)),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+      expect(find.byType(FlAreaChart), findsOneWidget);
+    });
+
+    testWidgets('renders stacked mode without error', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: FlAreaChart(
+              data: AreaChartData(
+                series: [
+                  AreaSeries(
+                    points: [
+                      AreaPoint(x: 0, y: 30, label: 'Q1'),
+                      AreaPoint(x: 1, y: 50, label: 'Q2'),
+                    ],
+                    label: 'A',
+                    style: AreaSeriesStyle(color: Color(0xFF5C6BC0)),
+                  ),
+                  AreaSeries(
+                    points: [
+                      AreaPoint(x: 0, y: 20, label: 'Q1'),
+                      AreaPoint(x: 1, y: 30, label: 'Q2'),
+                    ],
+                    label: 'B',
+                    style: AreaSeriesStyle(color: Color(0xFF26A69A)),
+                  ),
+                ],
+                stacked: true,
+              ),
+            ),
+          ),
+        ),
+      );
+      expect(find.byType(FlAreaChart), findsOneWidget);
+    });
+
+    testWidgets('renders with no animation', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlAreaChart(
+              data: const AreaChartData(
+                series: [
+                  AreaSeries(
+                    points: [
+                      AreaPoint(x: 0, y: 50, label: 'A'),
+                      AreaPoint(x: 1, y: 80, label: 'B'),
+                    ],
+                    label: 'Test',
+                  ),
+                ],
+              ),
+              animation: ChartAnimation.none(),
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+      expect(find.byType(FlAreaChart), findsOneWidget);
+    });
+
+    testWidgets('renders legend for multi-series', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: SingleChildScrollView(
+              child: FlAreaChart(
+                data: AreaChartData(
+                  series: [
+                    AreaSeries(
+                      points: [AreaPoint(x: 0, y: 30, label: 'A')],
+                      label: 'Revenue',
+                    ),
+                    AreaSeries(
+                      points: [AreaPoint(x: 0, y: 20, label: 'A')],
+                      label: 'Expenses',
+                    ),
+                  ],
+                ),
+                showLegend: true,
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Revenue'), findsOneWidget);
+      expect(find.text('Expenses'), findsOneWidget);
+    });
+
+    testWidgets('does not render legend when showLegend is false',
+        (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: FlAreaChart(
+              data: AreaChartData(
+                series: [
+                  AreaSeries(
+                    points: [AreaPoint(x: 0, y: 30, label: 'A')],
+                    label: 'Revenue',
+                  ),
+                  AreaSeries(
+                    points: [AreaPoint(x: 0, y: 20, label: 'A')],
+                    label: 'Expenses',
+                  ),
+                ],
+              ),
+              showLegend: false,
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Revenue'), findsNothing);
+      expect(find.text('Expenses'), findsNothing);
+    });
+
+    testWidgets('renders with ChartTheme', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlAreaChart(
+              data: const AreaChartData(
+                series: [
+                  AreaSeries(
+                    points: [
+                      AreaPoint(x: 0, y: 30, label: 'A'),
+                      AreaPoint(x: 1, y: 60, label: 'B'),
+                    ],
+                    label: 'Series 1',
+                  ),
+                  AreaSeries(
+                    points: [
+                      AreaPoint(x: 0, y: 20, label: 'A'),
+                      AreaPoint(x: 1, y: 40, label: 'B'),
+                    ],
+                    label: 'Series 2',
+                  ),
+                ],
+              ),
+              theme: ChartTheme.ocean(),
+              animation: ChartAnimation.none(),
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+      expect(find.byType(FlAreaChart), findsOneWidget);
+    });
+
+    testWidgets('renders with elegant animation', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlAreaChart(
+              data: const AreaChartData(
+                series: [
+                  AreaSeries(
+                    points: [
+                      AreaPoint(x: 0, y: 30, label: 'A'),
+                      AreaPoint(x: 1, y: 60, label: 'B'),
+                    ],
+                    label: 'Test',
+                  ),
+                ],
+              ),
+              animation: ChartAnimation.elegant(),
+            ),
+          ),
+        ),
+      );
+      expect(find.byType(FlAreaChart), findsOneWidget);
+    });
+
+    testWidgets('onPointTapped callback is accepted by widget', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlAreaChart(
+              data: const AreaChartData(
+                series: [
+                  AreaSeries(
+                    points: [
+                      AreaPoint(x: 0, y: 30, label: 'Jan'),
+                      AreaPoint(x: 1, y: 80, label: 'Feb'),
+                      AreaPoint(x: 2, y: 55, label: 'Mar'),
+                    ],
+                    label: 'Revenue',
+                  ),
+                ],
+              ),
+              animation: ChartAnimation.none(),
+              onPointTapped: (point, si, pi) {},
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byType(FlAreaChart), findsOneWidget);
+    });
+  });
 }
