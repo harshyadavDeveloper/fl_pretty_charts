@@ -1757,4 +1757,399 @@ void main() {
       expect(find.byType(FlHorizontalBarChart), findsOneWidget);
     });
   });
+
+  // ── StackedBarSeries ───────────────────────────────────────────────────────
+  group('StackedBarSeries', () {
+    test('stores label, color and values correctly', () {
+      const series = StackedBarSeries(
+        label: 'Revenue',
+        color: Color(0xFF5C6BC0),
+        values: [30, 50, 40, 60],
+      );
+      expect(series.label, equals('Revenue'));
+      expect(series.color, equals(const Color(0xFF5C6BC0)));
+      expect(series.values.length, equals(4));
+      expect(series.values[0], equals(30));
+      expect(series.values[3], equals(60));
+    });
+  });
+
+  // ── StackedBarStyle ────────────────────────────────────────────────────────
+  group('StackedBarStyle', () {
+    test('has correct defaults', () {
+      const style = StackedBarStyle();
+      expect(style.borderRadius, equals(6.0));
+      expect(style.barWidthFraction, equals(0.6));
+    });
+
+    test('accepts custom values', () {
+      const style = StackedBarStyle(
+        borderRadius: 12.0,
+        barWidthFraction: 0.8,
+      );
+      expect(style.borderRadius, equals(12.0));
+      expect(style.barWidthFraction, equals(0.8));
+    });
+  });
+
+  // ── StackedAxisStyle ───────────────────────────────────────────────────────
+  group('StackedAxisStyle', () {
+    test('has correct defaults', () {
+      const style = StackedAxisStyle();
+      expect(style.showGrid, isTrue);
+      expect(style.yAxisDivisions, equals(5));
+      expect(style.gridOpacity, equals(0.2));
+    });
+
+    test('accepts custom values', () {
+      const style = StackedAxisStyle(
+        showGrid: false,
+        yAxisDivisions: 3,
+        gridOpacity: 0.4,
+      );
+      expect(style.showGrid, isFalse);
+      expect(style.yAxisDivisions, equals(3));
+      expect(style.gridOpacity, equals(0.4));
+    });
+  });
+
+  // ── StackedTooltipStyle ────────────────────────────────────────────────────
+  group('StackedTooltipStyle', () {
+    test('has correct defaults', () {
+      const style = StackedTooltipStyle();
+      expect(style.borderRadius, equals(6.0));
+      expect(style.backgroundColor, equals(const Color(0xDD000000)));
+    });
+  });
+
+  // ── StackedBarChartData ────────────────────────────────────────────────────
+  group('StackedBarChartData', () {
+    test('stores groups and series correctly', () {
+      const data = StackedBarChartData(
+        groups: ['Q1', 'Q2', 'Q3', 'Q4'],
+        series: [
+          StackedBarSeries(
+            label: 'Revenue',
+            color: Color(0xFF5C6BC0),
+            values: [30, 50, 40, 60],
+          ),
+          StackedBarSeries(
+            label: 'Expenses',
+            color: Color(0xFF26A69A),
+            values: [20, 30, 25, 35],
+          ),
+        ],
+      );
+      expect(data.groups.length, equals(4));
+      expect(data.series.length, equals(2));
+      expect(data.series[0].label, equals('Revenue'));
+      expect(data.series[1].label, equals('Expenses'));
+    });
+
+    test('has correct defaults', () {
+      const data = StackedBarChartData(
+        groups: ['A', 'B'],
+        series: [
+          StackedBarSeries(
+            label: 'S1',
+            color: Colors.blue,
+            values: [10, 20],
+          ),
+        ],
+      );
+      expect(data.percentageMode, isFalse);
+      expect(data.maxY, isNull);
+    });
+
+    test('accepts percentageMode', () {
+      const data = StackedBarChartData(
+        groups: ['A', 'B'],
+        series: [
+          StackedBarSeries(
+            label: 'S1',
+            color: Colors.blue,
+            values: [60, 70],
+          ),
+          StackedBarSeries(
+            label: 'S2',
+            color: Colors.red,
+            values: [40, 30],
+          ),
+        ],
+        percentageMode: true,
+      );
+      expect(data.percentageMode, isTrue);
+    });
+
+    test('accepts custom maxY', () {
+      const data = StackedBarChartData(
+        groups: ['A', 'B'],
+        series: [
+          StackedBarSeries(
+            label: 'S1',
+            color: Colors.blue,
+            values: [10, 20],
+          ),
+        ],
+        maxY: 200.0,
+      );
+      expect(data.maxY, equals(200.0));
+    });
+
+    test('accepts custom barStyle and axisStyle', () {
+      const data = StackedBarChartData(
+        groups: ['A', 'B'],
+        series: [
+          StackedBarSeries(
+            label: 'S1',
+            color: Colors.blue,
+            values: [10, 20],
+          ),
+        ],
+        barStyle: StackedBarStyle(borderRadius: 12, barWidthFraction: 0.7),
+        axisStyle: StackedAxisStyle(showGrid: false, yAxisDivisions: 3),
+      );
+      expect(data.barStyle.borderRadius, equals(12.0));
+      expect(data.barStyle.barWidthFraction, equals(0.7));
+      expect(data.axisStyle.showGrid, isFalse);
+      expect(data.axisStyle.yAxisDivisions, equals(3));
+    });
+  });
+
+  // ── FlStackedBarChart Widget ───────────────────────────────────────────────
+  group('FlStackedBarChart widget', () {
+    testWidgets('renders without error', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: FlStackedBarChart(
+              data: StackedBarChartData(
+                groups: ['Q1', 'Q2', 'Q3', 'Q4'],
+                series: [
+                  StackedBarSeries(
+                    label: 'Revenue',
+                    color: Color(0xFF5C6BC0),
+                    values: [30, 50, 40, 60],
+                  ),
+                  StackedBarSeries(
+                    label: 'Expenses',
+                    color: Color(0xFF26A69A),
+                    values: [20, 30, 25, 35],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+      expect(find.byType(FlStackedBarChart), findsOneWidget);
+    });
+
+    testWidgets('renders with percentage mode', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: FlStackedBarChart(
+              data: StackedBarChartData(
+                groups: ['Jan', 'Feb', 'Mar'],
+                series: [
+                  StackedBarSeries(
+                    label: 'Mobile',
+                    color: Color(0xFF5C6BC0),
+                    values: [60, 55, 65],
+                  ),
+                  StackedBarSeries(
+                    label: 'Desktop',
+                    color: Color(0xFF26A69A),
+                    values: [40, 45, 35],
+                  ),
+                ],
+                percentageMode: true,
+              ),
+            ),
+          ),
+        ),
+      );
+      expect(find.byType(FlStackedBarChart), findsOneWidget);
+    });
+
+    testWidgets('renders with no animation', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlStackedBarChart(
+              data: const StackedBarChartData(
+                groups: ['A', 'B', 'C'],
+                series: [
+                  StackedBarSeries(
+                    label: 'S1',
+                    color: Color(0xFF5C6BC0),
+                    values: [10, 20, 30],
+                  ),
+                ],
+              ),
+              animation: ChartAnimation.none(),
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+      expect(find.byType(FlStackedBarChart), findsOneWidget);
+    });
+
+    testWidgets('renders legend when showLegend is true', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: SingleChildScrollView(
+              child: FlStackedBarChart(
+                data: StackedBarChartData(
+                  groups: ['Q1', 'Q2'],
+                  series: [
+                    StackedBarSeries(
+                      label: 'Revenue',
+                      color: Color(0xFF5C6BC0),
+                      values: [30, 50],
+                    ),
+                    StackedBarSeries(
+                      label: 'Expenses',
+                      color: Color(0xFF26A69A),
+                      values: [20, 30],
+                    ),
+                  ],
+                ),
+                showLegend: true,
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Revenue'), findsOneWidget);
+      expect(find.text('Expenses'), findsOneWidget);
+    });
+
+    testWidgets('does not render legend when showLegend is false',
+        (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: FlStackedBarChart(
+              data: StackedBarChartData(
+                groups: ['Q1', 'Q2'],
+                series: [
+                  StackedBarSeries(
+                    label: 'Revenue',
+                    color: Color(0xFF5C6BC0),
+                    values: [30, 50],
+                  ),
+                ],
+              ),
+              showLegend: false,
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Revenue'), findsNothing);
+    });
+
+    testWidgets('renders with ChartTheme', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlStackedBarChart(
+              data: const StackedBarChartData(
+                groups: ['Q1', 'Q2', 'Q3'],
+                series: [
+                  StackedBarSeries(
+                    label: 'S1',
+                    color: Colors.grey,
+                    values: [30, 40, 50],
+                  ),
+                  StackedBarSeries(
+                    label: 'S2',
+                    color: Colors.grey,
+                    values: [20, 30, 40],
+                  ),
+                ],
+              ),
+              theme: ChartTheme.ocean(),
+              animation: ChartAnimation.none(),
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+      expect(find.byType(FlStackedBarChart), findsOneWidget);
+    });
+
+    testWidgets('renders with four series', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: FlStackedBarChart(
+              data: StackedBarChartData(
+                groups: ['W1', 'W2', 'W3', 'W4'],
+                series: [
+                  StackedBarSeries(
+                    label: 'Design',
+                    color: Color(0xFFAB47BC),
+                    values: [15, 20, 18, 22],
+                  ),
+                  StackedBarSeries(
+                    label: 'Dev',
+                    color: Color(0xFF5C6BC0),
+                    values: [40, 35, 45, 38],
+                  ),
+                  StackedBarSeries(
+                    label: 'QA',
+                    color: Color(0xFF26A69A),
+                    values: [10, 15, 12, 18],
+                  ),
+                  StackedBarSeries(
+                    label: 'PM',
+                    color: Color(0xFFFF7043),
+                    values: [8, 10, 9, 12],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+      expect(find.byType(FlStackedBarChart), findsOneWidget);
+    });
+
+    testWidgets('onSegmentTapped callback is accepted by widget',
+        (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlStackedBarChart(
+              data: const StackedBarChartData(
+                groups: ['Q1', 'Q2', 'Q3'],
+                series: [
+                  StackedBarSeries(
+                    label: 'Revenue',
+                    color: Color(0xFF5C6BC0),
+                    values: [30, 50, 40],
+                  ),
+                  StackedBarSeries(
+                    label: 'Expenses',
+                    color: Color(0xFF26A69A),
+                    values: [20, 30, 25],
+                  ),
+                ],
+              ),
+              animation: ChartAnimation.none(),
+              onSegmentTapped: (series, gi, si) {},
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byType(FlStackedBarChart), findsOneWidget);
+    });
+  });
 }

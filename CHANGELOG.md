@@ -5,6 +5,25 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## 1.2.0
+
+### Added
+- 📊 `FlStackedBarChart` — animated stacked bar chart widget
+- `StackedBarChartData` — main data model with groups and series
+- `StackedBarSeries` — single series with label, color, and values
+- `StackedBarStyle` — border radius and bar width fraction
+- `StackedAxisStyle` — grid lines, y-axis divisions, label style
+- `StackedTooltipStyle` — tooltip appearance configuration
+- Percentage mode — normalize each bar to 100% via `percentageMode: true`
+- Tap-to-highlight individual segments with glow effect
+- Tooltip shows series label + value or percentage
+- `ChartTheme` support via `theme` parameter
+- Built-in `LegendWidget` below chart via `showLegend: true`
+- Smart rounding — only topmost segment gets rounded corners
+- Full dartdoc on all public APIs
+
+---
+
 ## 1.1.0
 
 ### Added

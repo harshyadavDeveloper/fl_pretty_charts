@@ -47,8 +47,10 @@ class StackedBarChartPainter extends CustomPainter {
     final chartWidth = chartRight - chartLeft;
     final chartHeight = chartBottom - chartTop;
 
-    _drawGrid(canvas, chartLeft, chartTop, chartWidth, chartHeight, chartBottom);
-    _drawBars(canvas, chartLeft, chartTop, chartWidth, chartHeight, chartBottom);
+    _drawGrid(
+        canvas, chartLeft, chartTop, chartWidth, chartHeight, chartBottom);
+    _drawBars(
+        canvas, chartLeft, chartTop, chartWidth, chartHeight, chartBottom);
     _drawTooltip(canvas, chartLeft, chartTop, chartWidth, chartHeight);
   }
 
@@ -128,14 +130,13 @@ class StackedBarChartPainter extends CustomPainter {
             ? (rawValue / groupTotal) * maxY
             : rawValue;
 
-        final segmentHeight =
-            (value / maxY) * height * animationProgress;
+        final segmentHeight = (value / maxY) * height * animationProgress;
 
         if (segmentHeight <= 0) continue;
 
         final segTop = currentBottom - segmentHeight;
-        final isTopSegment = si == data.series.length - 1 ||
-            _isTopVisibleSegment(gi, si);
+        final isTopSegment =
+            si == data.series.length - 1 || _isTopVisibleSegment(gi, si);
         final isSelected =
             gi == selectedGroupIndex && si == selectedSeriesIndex;
 
@@ -159,9 +160,8 @@ class StackedBarChartPainter extends CustomPainter {
         }
 
         final segPaint = Paint()
-          ..color = isSelected
-              ? series.color
-              : series.color.withValues(alpha: 0.85)
+          ..color =
+              isSelected ? series.color : series.color.withValues(alpha: 0.85)
           ..style = PaintingStyle.fill;
 
         canvas.drawRRect(rrect, segPaint);
@@ -198,8 +198,7 @@ class StackedBarChartPainter extends CustomPainter {
 
     final groupCount = data.groups.length;
     final slotWidth = width / groupCount;
-    final slotCenter =
-        left + slotWidth * selectedGroupIndex + slotWidth / 2;
+    final slotCenter = left + slotWidth * selectedGroupIndex + slotWidth / 2;
 
     // Calculate y position of selected segment top
     double groupTotal = 0;

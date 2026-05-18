@@ -1,6 +1,6 @@
 name: fl_pretty_charts
 description: A beautiful, animated Flutter charts package. Includes Bar, Line, Pie/Donut, and Radar charts. Zero dependencies — pure Flutter custom painter.
-version: 1.1.0
+version: 1.2.0
 homepage: https://github.com/harshyadavDeveloper/fl_pretty_charts
 
 environment:

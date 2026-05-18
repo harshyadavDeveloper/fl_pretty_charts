@@ -86,15 +86,75 @@ class _BarChartsPageState extends State<BarChartsPage> {
     ),
   );
 
-  static const _customColorHorizontalData = BarChartData(
-    bars: [
-      BarData(value: 95, label: 'Sales', color: Color(0xFF5C6BC0)),
-      BarData(value: 72, label: 'Support', color: Color(0xFF26A69A)),
-      BarData(value: 60, label: 'Design', color: Color(0xFFFF7043)),
-      BarData(value: 45, label: 'Dev', color: Color(0xFFAB47BC)),
-      BarData(value: 38, label: 'HR', color: Color(0xFFFFCA28)),
+  // ── Stacked Bar Datasets ───────────────────────────────────────────────────
+
+  static const _stackedRevenueData = StackedBarChartData(
+    groups: ['Q1', 'Q2', 'Q3', 'Q4'],
+    series: [
+      StackedBarSeries(
+        label: 'Revenue',
+        color: Color(0xFF5C6BC0),
+        values: [30, 50, 40, 60],
+      ),
+      StackedBarSeries(
+        label: 'Expenses',
+        color: Color(0xFF26A69A),
+        values: [20, 30, 25, 35],
+      ),
+      StackedBarSeries(
+        label: 'Profit',
+        color: Color(0xFFFFCA28),
+        values: [10, 20, 15, 25],
+      ),
     ],
-    axisStyle: AxisStyle(yAxisDivisions: 4, gridOpacity: 0.15),
+  );
+
+  static const _stackedPercentageData = StackedBarChartData(
+    groups: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+    series: [
+      StackedBarSeries(
+        label: 'Mobile',
+        color: Color(0xFF5C6BC0),
+        values: [60, 55, 65, 70, 58],
+      ),
+      StackedBarSeries(
+        label: 'Desktop',
+        color: Color(0xFF26A69A),
+        values: [30, 35, 25, 20, 32],
+      ),
+      StackedBarSeries(
+        label: 'Tablet',
+        color: Color(0xFFFF7043),
+        values: [10, 10, 10, 10, 10],
+      ),
+    ],
+    percentageMode: true,
+  );
+
+  static const _stackedTeamData = StackedBarChartData(
+    groups: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+    series: [
+      StackedBarSeries(
+        label: 'Design',
+        color: Color(0xFFAB47BC),
+        values: [15, 20, 18, 22],
+      ),
+      StackedBarSeries(
+        label: 'Dev',
+        color: Color(0xFF5C6BC0),
+        values: [40, 35, 45, 38],
+      ),
+      StackedBarSeries(
+        label: 'QA',
+        color: Color(0xFF26A69A),
+        values: [10, 15, 12, 18],
+      ),
+      StackedBarSeries(
+        label: 'PM',
+        color: Color(0xFFFF7043),
+        values: [8, 10, 9, 12],
+      ),
+    ],
   );
 
   // ── Build ──────────────────────────────────────────────────────────────────
@@ -159,14 +219,46 @@ class _BarChartsPageState extends State<BarChartsPage> {
             height: 200,
           ),
         ),
+
+        // ── Stacked ───────────────────────────────────────────────────────
+        _buildSectionHeader('Stacked Bar Charts'),
         ChartSection(
-          title: '🎨 Department Performance',
-          subtitle: 'Per-bar colors · Bouncy animation · Tap a bar!',
-          child: FlHorizontalBarChart(
-            data: _customColorHorizontalData,
+          title: '📦 Revenue Breakdown',
+          subtitle: 'Three series · Legend · Tap a segment!',
+          child: FlStackedBarChart(
+            data: _stackedRevenueData,
+            animation: ChartAnimation.elegant(),
+            onSegmentTapped: (series, gi, si) => setState(
+              () => _lastTapped =
+                  '${series.label} ${_stackedRevenueData.groups[gi]}: '
+                      '${series.values[gi].toInt()}',
+            ),
+          ),
+        ),
+        ChartSection(
+          title: '📱 Device Usage',
+          subtitle: 'Percentage mode · Normalized to 100% · Snappy',
+          child: FlStackedBarChart(
+            data: _stackedPercentageData,
+            animation: ChartAnimation.snappy(),
+            onSegmentTapped: (series, gi, si) => setState(
+              () => _lastTapped =
+                  '${series.label} ${_stackedPercentageData.groups[gi]}: '
+                      '${series.values[gi].toInt()}%',
+            ),
+          ),
+        ),
+        ChartSection(
+          title: '👥 Team Hours by Week',
+          subtitle: 'Four series · Bouncy animation · Tap a segment!',
+          child: FlStackedBarChart(
+            data: _stackedTeamData,
             animation: ChartAnimation.bouncy(),
-            onBarTapped: (bar, index) => setState(
-              () => _lastTapped = '${bar.label}: ${bar.value.toInt()}%',
+            height: 300,
+            onSegmentTapped: (series, gi, si) => setState(
+              () => _lastTapped =
+                  '${series.label} ${_stackedTeamData.groups[gi]}: '
+                      '${series.values[gi].toInt()} hrs',
             ),
           ),
         ),
