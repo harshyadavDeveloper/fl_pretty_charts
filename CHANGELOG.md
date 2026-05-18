@@ -5,6 +5,17 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## 1.2.1
+
+### Added
+- 🌐 Live demo deployed at [fl-pretty-charts.netlify.app](https://fl-pretty-charts.netlify.app)
+- Added live demo link to README
+
+### Fixed
+- Added `netlify.toml` to prevent Dart files being treated as serverless functions
+
+---
+
 ## 1.2.0
 
 ### Added

@@ -8,6 +8,8 @@
 
 A beautiful, animated Flutter charts package with zero external dependencies — built entirely with Flutter's `CustomPainter`.
 
+🌐 **[Live Demo → fl-pretty-charts.netlify.app](https://fl-pretty-charts.netlify.app)**
+
 ---
 
 ## 📸 Chart Examples
