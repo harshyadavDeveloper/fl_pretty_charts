@@ -5,9 +5,47 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## 2.0.0 — Live Charts 🔴
+
+### Added
+
+- 🔴 `FlLiveBarChart` — real-time bar chart with smooth tween transitions
+  - Tweens from old values to new values on each data update
+  - Supports `LiveDataController<List<BarData>>`
+  - Full `BarStyle`, `AxisStyle`, `ChartTheme` support
+- 📡 `FlLiveLineChart` — scrolling live line chart with rolling window
+  - Single-series via `FlLiveLineChart(controller:...)`
+  - Multi-series via `FlLiveLineChart.multi(controller:...)`
+  - Rolling window — keeps last N points, slides old ones out
+  - "Waiting for data..." placeholder before first emission
+- 📉 `FlLiveAreaChart` — real-time area chart with rolling window
+  - Single-series via `FlLiveAreaChart(controller:...)`
+  - Multi-series via `FlLiveAreaChart.multi(controller:...)`
+  - Rolling window with smooth bezier curve updates
+- 🎛️ `LiveDataController<T>` — generic data controller
+  - `add(data)` / `update(data)` — push new data
+  - `pause()` / `resume()` / `togglePause()` — playback control
+  - `stream` setter — attach external `Stream<T>` as data source
+  - `lastValue` — seed new listeners with latest data
+  - Auto-disposes cleanly
+- ⏱️ `LiveTicker` — periodic timer helper for demos and testing
+- 🔀 `LiveChartMixin` — reusable stream subscription lifecycle mixin
+- Example app updated with Live Charts tab
+  - Play/pause controls
+  - Speed selector (slow/normal/fast)
+  - Reset button
+  - Single line, multi-line, area, and bar live demos
+
+### Breaking Changes
+
+- None — all existing chart widgets unchanged
+
+---
+
 ## 1.3.0
 
 ### Added
+
 - 📉 `FlAreaChart` — animated area chart widget
 - `AreaChartData` — main data model with series and style config
 - `AreaSeries` — single area series with points, label, and style
@@ -31,10 +69,12 @@ This project follows [Semantic Versioning](https://semver.org/).
 ## 1.2.1
 
 ### Added
+
 - 🌐 Live demo deployed at [fl-pretty-charts.netlify.app](https://fl-pretty-charts.netlify.app)
 - Added live demo link to README
 
 ### Fixed
+
 - Added `netlify.toml` to prevent Dart files being treated as serverless functions
 
 ---
@@ -42,6 +82,7 @@ This project follows [Semantic Versioning](https://semver.org/).
 ## 1.2.0
 
 ### Added
+
 - 📊 `FlStackedBarChart` — animated stacked bar chart widget
 - `StackedBarChartData` — main data model with groups and series
 - `StackedBarSeries` — single series with label, color, and values
@@ -61,6 +102,7 @@ This project follows [Semantic Versioning](https://semver.org/).
 ## 1.1.0
 
 ### Added
+
 - ↔️ `FlHorizontalBarChart` — animated horizontal bar chart widget
 - Bars grow left to right with smooth animation
 - Reuses all existing `BarChartData` models — zero new data classes needed

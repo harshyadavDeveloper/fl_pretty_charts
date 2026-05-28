@@ -5,6 +5,7 @@ import 'pie_charts_page.dart';
 import 'radar_charts_page.dart';
 import 'area_charts_page.dart';
 import 'theme_demo_page.dart';
+import 'live_charts_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -51,6 +52,10 @@ class _HomePageState extends State<HomePage> {
             label: 'Radar',
           ),
           NavigationDestination(
+            icon: Icon(Icons.sensors),
+            label: 'Live',
+          ),
+          NavigationDestination(
             icon: Icon(Icons.palette),
             label: 'Themes',
           ),
@@ -62,7 +67,8 @@ class _HomePageState extends State<HomePage> {
         2 => const AreaChartsPage(),
         3 => const PieChartsPage(),
         4 => const RadarChartsPage(),
-        5 => const ThemeDemoPage(),
+        5 => const LiveChartsPage(),
+        6 => const ThemeDemoPage(),
         _ => const BarChartsPage(),
       },
     );

@@ -79,6 +79,12 @@ export 'src/radar_chart/radar_chart.dart';
 export 'src/radar_chart/radar_chart_data.dart';
 export 'src/radar_chart/radar_chart_painter.dart';
 
+// ── Live Charts ────────────────────────────────────────────────────────────
+export 'src/live/live_data_controller.dart';
+export 'src/live/live_bar_chart.dart';
+export 'src/live/live_line_chart.dart';
+export 'src/live/live_area_chart.dart';
+
 // ── Common ─────────────────────────────────────────────────────────────────
 export 'src/common/chart_animation.dart';
 export 'src/common/chart_theme.dart';

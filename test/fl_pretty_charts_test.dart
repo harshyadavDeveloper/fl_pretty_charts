@@ -2600,4 +2600,425 @@ void main() {
       expect(find.byType(FlAreaChart), findsOneWidget);
     });
   });
+  // ── LiveDataController ─────────────────────────────────────────────────────
+  group('LiveDataController', () {
+    test('starts not paused and not disposed', () {
+      final controller = LiveDataController<double>();
+      expect(controller.isPaused, isFalse);
+      expect(controller.isDisposed, isFalse);
+      expect(controller.lastValue, isNull);
+      controller.dispose();
+    });
+
+    test('add emits data to listeners', () async {
+      final controller = LiveDataController<double>();
+      final received = <double>[];
+      final sub = controller.dataStream.listen(received.add);
+
+      controller.add(42.0);
+      controller.add(55.0);
+      await Future.delayed(Duration.zero);
+
+      expect(received, equals([42.0, 55.0]));
+      expect(controller.lastValue, equals(55.0));
+
+      await sub.cancel();
+      controller.dispose();
+    });
+
+    test('update is alias for add', () async {
+      final controller = LiveDataController<double>();
+      final received = <double>[];
+      final sub = controller.dataStream.listen(received.add);
+
+      controller.update(99.0);
+      await Future.delayed(Duration.zero);
+
+      expect(received, equals([99.0]));
+
+      await sub.cancel();
+      controller.dispose();
+    });
+
+    test('pause stops data from being emitted', () async {
+      final controller = LiveDataController<double>();
+      final received = <double>[];
+      final sub = controller.dataStream.listen(received.add);
+
+      controller.add(10.0);
+      controller.pause();
+      controller.add(20.0);
+      controller.add(30.0);
+      await Future.delayed(Duration.zero);
+
+      expect(received, equals([10.0]));
+      expect(controller.isPaused, isTrue);
+
+      await sub.cancel();
+      controller.dispose();
+    });
+
+    test('resume allows data after pause', () async {
+      final controller = LiveDataController<double>();
+      final received = <double>[];
+      final sub = controller.dataStream.listen(received.add);
+
+      controller.pause();
+      controller.add(10.0);
+      controller.resume();
+      controller.add(20.0);
+      await Future.delayed(Duration.zero);
+
+      expect(received, equals([20.0]));
+      expect(controller.isPaused, isFalse);
+
+      await sub.cancel();
+      controller.dispose();
+    });
+
+    test('togglePause alternates paused state', () {
+      final controller = LiveDataController<double>();
+      expect(controller.isPaused, isFalse);
+      controller.togglePause();
+      expect(controller.isPaused, isTrue);
+      controller.togglePause();
+      expect(controller.isPaused, isFalse);
+      controller.dispose();
+    });
+
+    test('disposed controller ignores add calls', () async {
+      final controller = LiveDataController<double>();
+      final received = <double>[];
+      final sub = controller.dataStream.listen(received.add);
+
+      controller.add(1.0);
+      await Future.delayed(Duration.zero);
+      expect(received, equals([1.0]));
+
+      controller.dispose();
+      expect(controller.isDisposed, isTrue);
+      await sub.cancel();
+    });
+
+    test('works with List<double> type', () async {
+      final controller = LiveDataController<List<double>>();
+      final received = <List<double>>[];
+      final sub = controller.dataStream.listen(received.add);
+
+      controller.add([1.0, 2.0, 3.0]);
+      controller.add([4.0, 5.0, 6.0]);
+      await Future.delayed(Duration.zero);
+
+      expect(received.length, equals(2));
+      expect(received[0], equals([1.0, 2.0, 3.0]));
+      expect(received[1], equals([4.0, 5.0, 6.0]));
+
+      await sub.cancel();
+      controller.dispose();
+    });
+
+    test('lastValue is null before first emission', () {
+      final controller = LiveDataController<String>();
+      expect(controller.lastValue, isNull);
+      controller.dispose();
+    });
+
+    test('lastValue updates after each emission', () async {
+      final controller = LiveDataController<String>();
+      controller.add('hello');
+      await Future.delayed(Duration.zero);
+      expect(controller.lastValue, equals('hello'));
+      controller.add('world');
+      await Future.delayed(Duration.zero);
+      expect(controller.lastValue, equals('world'));
+      controller.dispose();
+    });
+  });
+
+  // ── LiveTicker ─────────────────────────────────────────────────────────────
+  group('LiveTicker', () {
+    test('calls onTick at interval', () async {
+      int count = 0;
+      final ticker = LiveTicker(
+        interval: const Duration(milliseconds: 50),
+        onTick: () => count++,
+      );
+
+      await Future.delayed(const Duration(milliseconds: 175));
+      ticker.dispose();
+
+      expect(count, greaterThanOrEqualTo(3));
+    });
+
+    test('isRunning is true after creation', () {
+      final ticker = LiveTicker(
+        interval: const Duration(milliseconds: 100),
+        onTick: () {},
+      );
+      expect(ticker.isRunning, isTrue);
+      ticker.dispose();
+    });
+
+    test('isRunning is false after dispose', () {
+      final ticker = LiveTicker(
+        interval: const Duration(milliseconds: 100),
+        onTick: () {},
+      );
+      ticker.dispose();
+      expect(ticker.isRunning, isFalse);
+    });
+
+    test('pause stops ticker', () async {
+      int count = 0;
+      final ticker = LiveTicker(
+        interval: const Duration(milliseconds: 50),
+        onTick: () => count++,
+      );
+
+      await Future.delayed(const Duration(milliseconds: 80));
+      ticker.pause();
+      final countAfterPause = count;
+      await Future.delayed(const Duration(milliseconds: 100));
+
+      expect(count, equals(countAfterPause));
+      expect(ticker.isRunning, isFalse);
+    });
+  });
+
+  // ── FlLiveBarChart Widget ──────────────────────────────────────────────────
+  group('FlLiveBarChart widget', () {
+    testWidgets('renders with initial data', (tester) async {
+      final controller = LiveDataController<List<BarData>>();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlLiveBarChart(
+              controller: controller,
+              initialData: const [
+                BarData(value: 30, label: 'Mon'),
+                BarData(value: 80, label: 'Tue'),
+                BarData(value: 55, label: 'Wed'),
+              ],
+            ),
+          ),
+        ),
+      );
+      expect(find.byType(FlLiveBarChart), findsOneWidget);
+      controller.dispose();
+    });
+
+    testWidgets('updates when controller emits new data', (tester) async {
+      final controller = LiveDataController<List<BarData>>();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlLiveBarChart(
+              controller: controller,
+              initialData: const [
+                BarData(value: 30, label: 'Mon'),
+                BarData(value: 80, label: 'Tue'),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      controller.add(const [
+        BarData(value: 50, label: 'Mon'),
+        BarData(value: 60, label: 'Tue'),
+      ]);
+
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(find.byType(FlLiveBarChart), findsOneWidget);
+      controller.dispose();
+    });
+
+    testWidgets('renders with ChartTheme', (tester) async {
+      final controller = LiveDataController<List<BarData>>();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlLiveBarChart(
+              controller: controller,
+              initialData: const [
+                BarData(value: 30, label: 'A'),
+                BarData(value: 60, label: 'B'),
+              ],
+              theme: ChartTheme.ocean(),
+            ),
+          ),
+        ),
+      );
+      expect(find.byType(FlLiveBarChart), findsOneWidget);
+      controller.dispose();
+    });
+  });
+
+  // ── FlLiveLineChart Widget ─────────────────────────────────────────────────
+  group('FlLiveLineChart widget', () {
+    testWidgets('renders placeholder before data', (tester) async {
+      final controller = LiveDataController<double>();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlLiveLineChart(
+              controller: controller,
+              label: 'Value',
+            ),
+          ),
+        ),
+      );
+      expect(find.byType(FlLiveLineChart), findsOneWidget);
+      controller.dispose();
+    });
+
+    testWidgets('renders chart after data emitted', (tester) async {
+      final controller = LiveDataController<double>();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlLiveLineChart(
+              controller: controller,
+              label: 'CPU',
+              maxPoints: 10,
+              maxY: 100,
+            ),
+          ),
+        ),
+      );
+
+      controller.add(45.0);
+      controller.add(60.0);
+      await tester.pump();
+
+      expect(find.byType(FlLiveLineChart), findsOneWidget);
+      expect(find.text('Press Play to start live data'), findsNothing);
+      controller.dispose();
+    });
+
+    testWidgets('multi factory renders without error', (tester) async {
+      final controller = LiveDataController<List<double>>();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlLiveLineChart.multi(
+              controller: controller,
+              labels: const ['CPU', 'Memory'],
+              colors: const [
+                Color(0xFF5C6BC0),
+                Color(0xFF26A69A),
+              ],
+              maxPoints: 15,
+            ),
+          ),
+        ),
+      );
+      expect(find.byType(FlLiveLineChart), findsOneWidget);
+      controller.dispose();
+    });
+
+    testWidgets('respects maxPoints rolling window', (tester) async {
+      final controller = LiveDataController<double>();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlLiveLineChart(
+              controller: controller,
+              label: 'Test',
+              maxPoints: 5,
+              maxY: 100,
+            ),
+          ),
+        ),
+      );
+
+      for (int i = 0; i < 10; i++) {
+        controller.add(i.toDouble() * 10);
+      }
+      await tester.pump();
+      expect(find.byType(FlLiveLineChart), findsOneWidget);
+      controller.dispose();
+    });
+  });
+
+  // ── FlLiveAreaChart Widget ─────────────────────────────────────────────────
+  group('FlLiveAreaChart widget', () {
+    testWidgets('renders placeholder before data', (tester) async {
+      final controller = LiveDataController<double>();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlLiveLineChart(
+              controller: controller,
+              label: 'Value',
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byType(FlLiveLineChart), findsOneWidget);
+      controller.dispose();
+    });
+
+    testWidgets('renders chart after data emitted', (tester) async {
+      final controller = LiveDataController<double>();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlLiveAreaChart(
+              controller: controller,
+              label: 'CPU',
+              maxPoints: 10,
+              maxY: 100,
+            ),
+          ),
+        ),
+      );
+
+      controller.add(45.0);
+      controller.add(60.0);
+      await tester.pump();
+
+      expect(find.byType(FlLiveAreaChart), findsOneWidget);
+      controller.dispose();
+    });
+
+    testWidgets('multi factory renders without error', (tester) async {
+      final controller = LiveDataController<List<double>>();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlLiveAreaChart.multi(
+              controller: controller,
+              labels: const ['CPU', 'Memory'],
+              colors: const [
+                Color(0xFF5C6BC0),
+                Color(0xFF26A69A),
+              ],
+              maxPoints: 15,
+            ),
+          ),
+        ),
+      );
+      expect(find.byType(FlLiveAreaChart), findsOneWidget);
+      controller.dispose();
+    });
+
+    testWidgets('renders with ChartTheme', (tester) async {
+      final controller = LiveDataController<double>();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlLiveAreaChart(
+              controller: controller,
+              label: 'Test',
+              theme: ChartTheme.sunset(),
+            ),
+          ),
+        ),
+      );
+      expect(find.byType(FlLiveAreaChart), findsOneWidget);
+      controller.dispose();
+    });
+  });
 }
