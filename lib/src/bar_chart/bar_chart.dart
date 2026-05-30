@@ -1,3 +1,4 @@
+import 'package:fl_pretty_charts/src/common/chart_annotation.dart';
 import 'package:flutter/material.dart';
 import 'bar_chart_data.dart';
 import 'bar_chart_painter.dart';
@@ -74,6 +75,9 @@ class FlBarChart extends StatefulWidget {
   /// The first color in [ChartTheme.colors] is used as the bar color.
   final ChartTheme? theme;
 
+  /// Optional annotation lines drawn on top of the chart.
+  final List<ChartAnnotation> annotations;
+
   const FlBarChart({
     super.key,
     required this.data,
@@ -83,6 +87,7 @@ class FlBarChart extends StatefulWidget {
     this.padding = const EdgeInsets.all(16),
     this.onBarTapped,
     this.theme,
+    this.annotations = const [],
   });
 
   @override
@@ -172,6 +177,7 @@ class _FlBarChartState extends State<FlBarChart>
                   animationProgress: animationValue,
                   selectedIndex: _selectedIndex,
                   maxY: _maxY,
+                  annotations: widget.annotations,
                 ),
               );
             },

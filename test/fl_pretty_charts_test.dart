@@ -3021,4 +3021,366 @@ void main() {
       controller.dispose();
     });
   });
+
+  // ── ChartAnnotation ────────────────────────────────────────────────────────
+  group('ChartAnnotation', () {
+    test('horizontal factory sets correct defaults', () {
+      final annotation = ChartAnnotation.horizontal(value: 80);
+      expect(annotation.axis, equals(AnnotationAxis.horizontal));
+      expect(annotation.value, equals(80));
+      expect(annotation.index, isNull);
+      expect(annotation.color, equals(const Color(0xFFEF5350)));
+      expect(annotation.strokeWidth, equals(1.5));
+      expect(annotation.dashPattern, equals([8, 4]));
+      expect(annotation.labelPosition, equals(AnnotationLabelPosition.end));
+      expect(annotation.labelOffsetY, equals(-14.0));
+    });
+
+    test('horizontal factory accepts custom values', () {
+      final annotation = ChartAnnotation.horizontal(
+        value: 60,
+        label: 'Target',
+        color: Colors.blue,
+        strokeWidth: 2.5,
+        dashPattern: [6, 3],
+        labelPosition: AnnotationLabelPosition.start,
+        labelOffsetY: -20,
+      );
+      expect(annotation.value, equals(60));
+      expect(annotation.label, equals('Target'));
+      expect(annotation.color, equals(Colors.blue));
+      expect(annotation.strokeWidth, equals(2.5));
+      expect(annotation.dashPattern, equals([6, 3]));
+      expect(annotation.labelPosition, equals(AnnotationLabelPosition.start));
+      expect(annotation.labelOffsetY, equals(-20));
+    });
+
+    test('vertical factory sets correct defaults', () {
+      final annotation = ChartAnnotation.vertical(index: 3);
+      expect(annotation.axis, equals(AnnotationAxis.vertical));
+      expect(annotation.index, equals(3));
+      expect(annotation.value, isNull);
+      expect(annotation.color, equals(const Color(0xFF66BB6A)));
+      expect(annotation.strokeWidth, equals(1.5));
+      expect(annotation.dashPattern, equals([8, 4]));
+      expect(annotation.labelPosition, equals(AnnotationLabelPosition.start));
+    });
+
+    test('vertical factory accepts custom values', () {
+      final annotation = ChartAnnotation.vertical(
+        index: 2,
+        label: 'Launch',
+        color: Colors.purple,
+        strokeWidth: 3.0,
+        dashPattern: [4, 4],
+        labelPosition: AnnotationLabelPosition.center,
+      );
+      expect(annotation.index, equals(2));
+      expect(annotation.label, equals('Launch'));
+      expect(annotation.color, equals(Colors.purple));
+      expect(annotation.strokeWidth, equals(3.0));
+      expect(annotation.dashPattern, equals([4, 4]));
+      expect(annotation.labelPosition, equals(AnnotationLabelPosition.center));
+    });
+
+    test('horizontal annotation has null index', () {
+      final annotation = ChartAnnotation.horizontal(value: 50);
+      expect(annotation.index, isNull);
+    });
+
+    test('vertical annotation has null value', () {
+      final annotation = ChartAnnotation.vertical(index: 1);
+      expect(annotation.value, isNull);
+    });
+
+    test('annotation without label has null label', () {
+      final annotation = ChartAnnotation.horizontal(value: 50);
+      expect(annotation.label, isNull);
+    });
+
+    test('annotation with label stores it correctly', () {
+      final annotation = ChartAnnotation.horizontal(
+        value: 50,
+        label: 'Threshold',
+      );
+      expect(annotation.label, equals('Threshold'));
+    });
+
+    test('solid line uses empty dashPattern', () {
+      final annotation = ChartAnnotation.horizontal(
+        value: 50,
+        dashPattern: [],
+      );
+      expect(annotation.dashPattern, isEmpty);
+    });
+  });
+
+  // ── AnnotationAxis enum ────────────────────────────────────────────────────
+  group('AnnotationAxis', () {
+    test('has horizontal and vertical values', () {
+      expect(AnnotationAxis.values.length, equals(2));
+      expect(AnnotationAxis.values, contains(AnnotationAxis.horizontal));
+      expect(AnnotationAxis.values, contains(AnnotationAxis.vertical));
+    });
+  });
+
+  // ── AnnotationLabelPosition enum ───────────────────────────────────────────
+  group('AnnotationLabelPosition', () {
+    test('has start, center, end values', () {
+      expect(AnnotationLabelPosition.values.length, equals(3));
+      expect(AnnotationLabelPosition.values,
+          contains(AnnotationLabelPosition.start));
+      expect(AnnotationLabelPosition.values,
+          contains(AnnotationLabelPosition.center));
+      expect(AnnotationLabelPosition.values,
+          contains(AnnotationLabelPosition.end));
+    });
+  });
+
+  // ── FlBarChart with annotations ────────────────────────────────────────────
+  group('FlBarChart with annotations', () {
+    testWidgets('renders with horizontal annotation', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlBarChart(
+              data: const BarChartData(
+                bars: [
+                  BarData(value: 30, label: 'A'),
+                  BarData(value: 80, label: 'B'),
+                  BarData(value: 55, label: 'C'),
+                ],
+              ),
+              annotations: [
+                ChartAnnotation.horizontal(
+                  value: 60,
+                  label: 'Target',
+                  color: const Color(0xFFEF5350),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+      expect(find.byType(FlBarChart), findsOneWidget);
+    });
+
+    testWidgets('renders with vertical annotation', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlBarChart(
+              data: const BarChartData(
+                bars: [
+                  BarData(value: 30, label: 'A'),
+                  BarData(value: 80, label: 'B'),
+                  BarData(value: 55, label: 'C'),
+                ],
+              ),
+              annotations: [
+                ChartAnnotation.vertical(
+                  index: 1,
+                  label: 'Peak',
+                  color: const Color(0xFF66BB6A),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+      expect(find.byType(FlBarChart), findsOneWidget);
+    });
+
+    testWidgets('renders with multiple annotations', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlBarChart(
+              data: const BarChartData(
+                bars: [
+                  BarData(value: 30, label: 'A'),
+                  BarData(value: 80, label: 'B'),
+                  BarData(value: 55, label: 'C'),
+                  BarData(value: 70, label: 'D'),
+                ],
+              ),
+              annotations: [
+                ChartAnnotation.horizontal(
+                  value: 40,
+                  label: 'Min',
+                  color: const Color(0xFF42A5F5),
+                ),
+                ChartAnnotation.horizontal(
+                  value: 70,
+                  label: 'Max',
+                  color: const Color(0xFFEF5350),
+                ),
+                ChartAnnotation.vertical(
+                  index: 1,
+                  label: 'Event',
+                  color: const Color(0xFF66BB6A),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+      expect(find.byType(FlBarChart), findsOneWidget);
+    });
+
+    testWidgets('renders with empty annotations list', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: FlBarChart(
+              data: BarChartData(
+                bars: [
+                  BarData(value: 30, label: 'A'),
+                  BarData(value: 80, label: 'B'),
+                ],
+              ),
+              annotations: [],
+            ),
+          ),
+        ),
+      );
+      expect(find.byType(FlBarChart), findsOneWidget);
+    });
+  });
+
+  // ── FlLineChart with annotations ───────────────────────────────────────────
+  group('FlLineChart with annotations', () {
+    testWidgets('renders with horizontal annotation', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlLineChart(
+              data: const LineChartData(
+                lines: [
+                  LineData(
+                    points: [
+                      LinePoint(x: 0, y: 30, label: 'Jan'),
+                      LinePoint(x: 1, y: 80, label: 'Feb'),
+                      LinePoint(x: 2, y: 55, label: 'Mar'),
+                    ],
+                    label: 'Revenue',
+                  ),
+                ],
+              ),
+              annotations: [
+                ChartAnnotation.horizontal(
+                  value: 60,
+                  label: 'Target',
+                  color: const Color(0xFFEF5350),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+      expect(find.byType(FlLineChart), findsOneWidget);
+    });
+
+    testWidgets('renders with vertical annotation', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlLineChart(
+              data: const LineChartData(
+                lines: [
+                  LineData(
+                    points: [
+                      LinePoint(x: 0, y: 30, label: 'Jan'),
+                      LinePoint(x: 1, y: 80, label: 'Feb'),
+                      LinePoint(x: 2, y: 55, label: 'Mar'),
+                    ],
+                    label: 'Revenue',
+                  ),
+                ],
+              ),
+              annotations: [
+                ChartAnnotation.vertical(
+                  index: 1,
+                  label: 'Launch',
+                  color: const Color(0xFF66BB6A),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+      expect(find.byType(FlLineChart), findsOneWidget);
+    });
+  });
+
+  // ── FlAreaChart with annotations ───────────────────────────────────────────
+  group('FlAreaChart with annotations', () {
+    testWidgets('renders with horizontal annotation', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlAreaChart(
+              data: const AreaChartData(
+                series: [
+                  AreaSeries(
+                    points: [
+                      AreaPoint(x: 0, y: 30, label: 'Q1'),
+                      AreaPoint(x: 1, y: 60, label: 'Q2'),
+                      AreaPoint(x: 2, y: 45, label: 'Q3'),
+                    ],
+                    label: 'Sales',
+                  ),
+                ],
+              ),
+              annotations: [
+                ChartAnnotation.horizontal(
+                  value: 50,
+                  label: 'Target',
+                  color: const Color(0xFFEF5350),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+      expect(find.byType(FlAreaChart), findsOneWidget);
+    });
+
+    testWidgets('renders with both annotation types', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlAreaChart(
+              data: const AreaChartData(
+                series: [
+                  AreaSeries(
+                    points: [
+                      AreaPoint(x: 0, y: 30, label: 'Q1'),
+                      AreaPoint(x: 1, y: 60, label: 'Q2'),
+                      AreaPoint(x: 2, y: 45, label: 'Q3'),
+                      AreaPoint(x: 3, y: 80, label: 'Q4'),
+                    ],
+                    label: 'Sales',
+                  ),
+                ],
+              ),
+              annotations: [
+                ChartAnnotation.horizontal(
+                  value: 50,
+                  label: 'Target',
+                  color: const Color(0xFFEF5350),
+                ),
+                ChartAnnotation.vertical(
+                  index: 2,
+                  label: 'Milestone',
+                  color: const Color(0xFFAB47BC),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+      expect(find.byType(FlAreaChart), findsOneWidget);
+    });
+  });
 }

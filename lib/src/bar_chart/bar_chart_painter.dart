@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../bar_chart/bar_chart_data.dart';
+import '../common/chart_annotation.dart';
 import '../common/chart_utils.dart';
 
 /// The [CustomPainter] responsible for rendering the bar chart.
@@ -25,11 +26,15 @@ class BarChartPainter extends CustomPainter {
   /// The resolved maximum y value (from data.maxY or auto-calculated).
   final double maxY;
 
+  /// Optional annotation lines drawn on top of the chart.
+  final List<ChartAnnotation> annotations;
+
   BarChartPainter({
     required this.data,
     required this.animationProgress,
     required this.selectedIndex,
     required this.maxY,
+    this.annotations = const [],
   });
 
   // ─── Layout constants ──────────────────────────────────────────────────────
@@ -55,6 +60,8 @@ class BarChartPainter extends CustomPainter {
     _drawGrid(
         canvas, chartLeft, chartTop, chartWidth, chartHeight, chartBottom);
     _drawBars(
+        canvas, chartLeft, chartTop, chartWidth, chartHeight, chartBottom);
+    _drawAnnotations(
         canvas, chartLeft, chartTop, chartWidth, chartHeight, chartBottom);
     _drawTooltip(canvas, chartLeft, chartTop, chartWidth, chartHeight);
   }
@@ -213,12 +220,40 @@ class BarChartPainter extends CustomPainter {
     );
   }
 
+  void _drawAnnotations(
+    Canvas canvas,
+    double left,
+    double top,
+    double width,
+    double height,
+    double bottom,
+  ) {
+    if (annotations.isEmpty) return;
+    final barCount = data.bars.length;
+    final slotWidth = width / barCount;
+    AnnotationPainter.draw(
+      canvas: canvas,
+      annotations: annotations,
+      chartLeft: left,
+      chartTop: top,
+      chartWidth: width,
+      chartHeight: height,
+      chartBottom: bottom,
+      maxY: maxY,
+      minY: data.minY,
+      pointCount: barCount,
+      slotWidth: slotWidth,
+      animationProgress: animationProgress,
+    );
+  }
+
   @override
   bool shouldRepaint(BarChartPainter oldDelegate) {
     return oldDelegate.animationProgress != animationProgress ||
         oldDelegate.selectedIndex != selectedIndex ||
         oldDelegate.data != data ||
-        oldDelegate.maxY != maxY;
+        oldDelegate.maxY != maxY ||
+        oldDelegate.annotations != annotations;
   }
 
   /// Hit-tests a tap [localPosition] and returns the index of the tapped bar,

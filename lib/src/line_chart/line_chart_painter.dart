@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'line_chart_data.dart';
+import '../common/chart_annotation.dart';
 import '../common/chart_utils.dart';
 
 /// The [CustomPainter] responsible for rendering the line chart.
@@ -27,12 +28,16 @@ class LineChartPainter extends CustomPainter {
   /// The resolved maximum y value.
   final double maxY;
 
+  /// Optional annotation lines drawn on top of the chart.
+  final List<ChartAnnotation> annotations;
+
   const LineChartPainter({
     required this.data,
     required this.animationProgress,
     required this.selectedLineIndex,
     required this.selectedPointIndex,
     required this.maxY,
+    this.annotations = const [],
   });
 
   // ─── Layout constants ──────────────────────────────────────────────────────
@@ -51,6 +56,8 @@ class LineChartPainter extends CustomPainter {
 
     _drawGrid(canvas, chartLeft, chartTop, chartWidth, chartHeight);
     _drawXLabels(canvas, chartLeft, chartBottom, chartWidth);
+    _drawAnnotations(
+        canvas, chartLeft, chartTop, chartWidth, chartHeight, chartBottom);
 
     for (int i = 0; i < data.lines.length; i++) {
       _drawLine(
@@ -364,13 +371,41 @@ class LineChartPainter extends CustomPainter {
     return value;
   }
 
+  void _drawAnnotations(
+    Canvas canvas,
+    double left,
+    double top,
+    double width,
+    double height,
+    double bottom,
+  ) {
+    if (annotations.isEmpty) return;
+    final pointCount = data.lines.isEmpty ? 0 : data.lines.first.points.length;
+    final slotWidth = pointCount <= 1 ? width : width / (pointCount - 1);
+    AnnotationPainter.draw(
+      canvas: canvas,
+      annotations: annotations,
+      chartLeft: left,
+      chartTop: top,
+      chartWidth: width,
+      chartHeight: height,
+      chartBottom: bottom,
+      maxY: maxY,
+      minY: data.minY,
+      pointCount: pointCount,
+      slotWidth: slotWidth,
+      animationProgress: animationProgress,
+    );
+  }
+
   @override
   bool shouldRepaint(LineChartPainter oldDelegate) {
     return oldDelegate.animationProgress != animationProgress ||
         oldDelegate.selectedLineIndex != selectedLineIndex ||
         oldDelegate.selectedPointIndex != selectedPointIndex ||
         oldDelegate.data != data ||
-        oldDelegate.maxY != maxY;
+        oldDelegate.maxY != maxY ||
+        oldDelegate.annotations != annotations;
   }
 
   /// Returns the [lineIndex, pointIndex] of the nearest data point

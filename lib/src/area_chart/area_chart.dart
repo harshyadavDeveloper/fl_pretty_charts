@@ -1,3 +1,4 @@
+import 'package:fl_pretty_charts/src/common/chart_annotation.dart';
 import 'package:flutter/material.dart';
 import 'area_chart_data.dart';
 import 'area_chart_painter.dart';
@@ -61,6 +62,9 @@ class FlAreaChart extends StatefulWidget {
   /// Whether to show the legend below the chart. Defaults to `true`.
   final bool showLegend;
 
+  /// Optional annotation lines drawn on top of the chart.
+  final List<ChartAnnotation> annotations;
+
   /// Callback fired when a data point is tapped.
   /// Receives the [AreaPoint], series index, and point index.
   final void Function(AreaPoint point, int seriesIndex, int pointIndex)?
@@ -75,6 +79,7 @@ class FlAreaChart extends StatefulWidget {
     this.padding = const EdgeInsets.all(16),
     this.theme,
     this.showLegend = true,
+    this.annotations = const [],
     this.onPointTapped,
   });
 
@@ -178,6 +183,7 @@ class _FlAreaChartState extends State<FlAreaChart>
       selectedSeriesIndex: -1,
       selectedPointIndex: -1,
       maxY: _maxY,
+      annotations: widget.annotations,
     );
 
     final result = painter.indexFromTap(details.localPosition, _chartSize);
@@ -223,6 +229,7 @@ class _FlAreaChartState extends State<FlAreaChart>
                       selectedSeriesIndex: _selectedSeriesIndex,
                       selectedPointIndex: _selectedPointIndex,
                       maxY: _maxY,
+                      annotations: widget.annotations,
                     ),
                   );
                 },

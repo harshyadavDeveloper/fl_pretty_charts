@@ -6,6 +6,7 @@ import 'radar_charts_page.dart';
 import 'area_charts_page.dart';
 import 'theme_demo_page.dart';
 import 'live_charts_page.dart';
+import 'annotations_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -59,6 +60,10 @@ class _HomePageState extends State<HomePage> {
             icon: Icon(Icons.palette),
             label: 'Themes',
           ),
+          NavigationDestination(
+            icon: Icon(Icons.architecture),
+            label: 'Notes',
+          ),
         ],
       ),
       body: switch (_currentTab) {
@@ -69,6 +74,7 @@ class _HomePageState extends State<HomePage> {
         4 => const RadarChartsPage(),
         5 => const LiveChartsPage(),
         6 => const ThemeDemoPage(),
+        7 => const AnnotationsPage(),
         _ => const BarChartsPage(),
       },
     );

@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'area_chart_data.dart';
+import '../common/chart_annotation.dart';
 import '../common/chart_utils.dart';
 
 /// The [CustomPainter] responsible for rendering the area chart.
@@ -28,12 +29,15 @@ class AreaChartPainter extends CustomPainter {
   /// The resolved maximum y value.
   final double maxY;
 
+  final List<ChartAnnotation> annotations;
+
   const AreaChartPainter({
     required this.data,
     required this.animationProgress,
     required this.selectedSeriesIndex,
     required this.selectedPointIndex,
     required this.maxY,
+    this.annotations = const [],
   });
 
   // ─── Layout constants ──────────────────────────────────────────────────────
@@ -52,6 +56,8 @@ class AreaChartPainter extends CustomPainter {
 
     _drawGrid(canvas, chartLeft, chartTop, chartWidth, chartHeight);
     _drawXLabels(canvas, chartLeft, chartBottom, chartWidth);
+    _drawAnnotations(
+        canvas, chartLeft, chartTop, chartWidth, chartHeight, chartBottom);
 
     if (data.stacked) {
       _drawStackedSeries(
@@ -495,12 +501,41 @@ class AreaChartPainter extends CustomPainter {
     return [bestSeries, bestPoint];
   }
 
+  void _drawAnnotations(
+    Canvas canvas,
+    double left,
+    double top,
+    double width,
+    double height,
+    double bottom,
+  ) {
+    if (annotations.isEmpty) return;
+    final pointCount =
+        data.series.isEmpty ? 0 : data.series.first.points.length;
+    final slotWidth = pointCount <= 1 ? width : width / (pointCount - 1);
+    AnnotationPainter.draw(
+      canvas: canvas,
+      annotations: annotations,
+      chartLeft: left,
+      chartTop: top,
+      chartWidth: width,
+      chartHeight: height,
+      chartBottom: bottom,
+      maxY: maxY,
+      minY: data.minY,
+      pointCount: pointCount,
+      slotWidth: slotWidth,
+      animationProgress: animationProgress,
+    );
+  }
+
   @override
   bool shouldRepaint(AreaChartPainter oldDelegate) {
     return oldDelegate.animationProgress != animationProgress ||
         oldDelegate.selectedSeriesIndex != selectedSeriesIndex ||
         oldDelegate.selectedPointIndex != selectedPointIndex ||
         oldDelegate.data != data ||
-        oldDelegate.maxY != maxY;
+        oldDelegate.maxY != maxY ||
+        oldDelegate.annotations != annotations;
   }
 }

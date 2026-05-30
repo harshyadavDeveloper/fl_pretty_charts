@@ -1,3 +1,4 @@
+import 'package:fl_pretty_charts/src/common/chart_annotation.dart';
 import 'package:flutter/material.dart';
 import 'line_chart_data.dart';
 import 'line_chart_painter.dart';
@@ -82,6 +83,9 @@ class FlLineChart extends StatefulWidget {
   /// [ChartTheme.colorAt(i)] is applied to line series at index i.
   final ChartTheme? theme;
 
+  /// Optional annotation lines drawn on top of the chart.
+  final List<ChartAnnotation> annotations;
+
   const FlLineChart({
     super.key,
     required this.data,
@@ -91,6 +95,7 @@ class FlLineChart extends StatefulWidget {
     this.padding = const EdgeInsets.all(16),
     this.onPointTapped,
     this.theme,
+    this.annotations = const [],
   });
 
   @override
@@ -152,6 +157,7 @@ class _FlLineChartState extends State<FlLineChart>
       selectedLineIndex: -1,
       selectedPointIndex: -1,
       maxY: _maxY,
+      annotations: widget.annotations,
     );
 
     final result = painter.indexFromTap(details.localPosition, _chartSize);
@@ -217,6 +223,7 @@ class _FlLineChartState extends State<FlLineChart>
                   selectedLineIndex: _selectedLineIndex,
                   selectedPointIndex: _selectedPointIndex,
                   maxY: _maxY,
+                  annotations: widget.annotations,
                 ),
               );
             },

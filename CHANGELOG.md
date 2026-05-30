@@ -5,6 +5,35 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## 2.1.0
+
+### Added
+
+- 🎯 `ChartAnnotation` — reference lines drawn on top of charts
+  - `ChartAnnotation.horizontal(value:)` — y-axis reference line
+  - `ChartAnnotation.vertical(index:)` — x-axis reference line
+  - Optional label with background pill styling
+  - Configurable dash pattern, stroke width, color, label position
+  - Three label positions: `start`, `center`, `end`
+- `AnnotationPainter` — internal utility for drawing annotations
+- `AnnotationAxis` — enum for horizontal/vertical axis
+- `AnnotationLabelPosition` — enum for label placement
+- Annotations supported on:
+  - `FlBarChart` via `annotations` parameter
+  - `FlLineChart` via `annotations` parameter
+  - `FlAreaChart` via `annotations` parameter
+- Annotations animate in with the chart reveal
+- Solid or dashed lines via `dashPattern` config
+
+### Use Cases Solved
+
+- Mark target values ("Target: 80")
+- Show averages ("Avg: 55")
+- Mark thresholds ("Max capacity")
+- Mark events ("Product launch", "Sale started")
+
+---
+
 ## 2.0.0 — Live Charts 🔴
 
 ### Added
