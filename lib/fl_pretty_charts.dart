@@ -88,6 +88,8 @@ export 'src/live/live_area_chart.dart';
 // ── Common ─────────────────────────────────────────────────────────────────
 export 'src/common/chart_animation.dart';
 export 'src/common/chart_annotation.dart';
+export 'src/common/chart_exporter.dart';
 export 'src/common/chart_theme.dart';
 export 'src/common/chart_utils.dart';
+export 'src/common/exportable_chart.dart';
 export 'src/common/legend_widget.dart';

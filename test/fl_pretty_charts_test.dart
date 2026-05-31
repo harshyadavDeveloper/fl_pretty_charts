@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fl_pretty_charts/fl_pretty_charts.dart';
 
@@ -3381,6 +3382,337 @@ void main() {
         ),
       );
       expect(find.byType(FlAreaChart), findsOneWidget);
+    });
+  });
+
+  // ── ExportableChart Widget ─────────────────────────────────────────────────
+  group('ExportableChart widget', () {
+    testWidgets('renders child widget correctly', (tester) async {
+      final exportKey = GlobalKey();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: ExportableChart(
+              exportKey: exportKey,
+              child: FlBarChart(
+                data: const BarChartData(
+                  bars: [
+                    BarData(value: 30, label: 'A'),
+                    BarData(value: 60, label: 'B'),
+                  ],
+                ),
+                animation: ChartAnimation.none(),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byType(ExportableChart), findsOneWidget);
+      expect(find.byType(FlBarChart), findsOneWidget);
+    });
+
+    testWidgets('shows export button by default', (tester) async {
+      final exportKey = GlobalKey();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: ExportableChart(
+              exportKey: exportKey,
+              child: FlBarChart(
+                data: const BarChartData(
+                  bars: [
+                    BarData(value: 30, label: 'A'),
+                    BarData(value: 60, label: 'B'),
+                  ],
+                ),
+                animation: ChartAnimation.none(),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Export'), findsOneWidget);
+    });
+
+    testWidgets('hides export button when showExportButton is false',
+        (tester) async {
+      final exportKey = GlobalKey();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: ExportableChart(
+              exportKey: exportKey,
+              showExportButton: false,
+              child: FlBarChart(
+                data: const BarChartData(
+                  bars: [
+                    BarData(value: 30, label: 'A'),
+                    BarData(value: 60, label: 'B'),
+                  ],
+                ),
+                animation: ChartAnimation.none(),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Export'), findsNothing);
+    });
+
+    testWidgets('wraps any chart type correctly', (tester) async {
+      final exportKey = GlobalKey();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SingleChildScrollView(
+              child: ExportableChart(
+                exportKey: exportKey,
+                chartName: 'Pie Chart',
+                child: FlPieChart(
+                  data: const PieChartData(
+                    segments: [
+                      PieSegment(
+                          value: 40, label: 'A', color: Color(0xFF5C6BC0)),
+                      PieSegment(
+                          value: 60, label: 'B', color: Color(0xFF26A69A)),
+                    ],
+                  ),
+                  animation: ChartAnimation.none(),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byType(ExportableChart), findsOneWidget);
+      expect(find.byType(FlPieChart), findsOneWidget);
+    });
+
+    testWidgets('wraps line chart correctly', (tester) async {
+      final exportKey = GlobalKey();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: ExportableChart(
+              exportKey: exportKey,
+              chartName: 'Line Chart',
+              child: FlLineChart(
+                data: const LineChartData(
+                  lines: [
+                    LineData(
+                      points: [
+                        LinePoint(x: 0, y: 30, label: 'A'),
+                        LinePoint(x: 1, y: 60, label: 'B'),
+                      ],
+                      label: 'Revenue',
+                    ),
+                  ],
+                ),
+                animation: ChartAnimation.none(),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byType(ExportableChart), findsOneWidget);
+      expect(find.byType(FlLineChart), findsOneWidget);
+    });
+
+    testWidgets('wraps radar chart correctly', (tester) async {
+      final exportKey = GlobalKey();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: ExportableChart(
+              exportKey: exportKey,
+              chartName: 'Radar Chart',
+              child: FlRadarChart(
+                data: const RadarChartData(
+                  labels: ['A', 'B', 'C', 'D', 'E'],
+                  datasets: [
+                    RadarDataset(
+                      values: [60, 70, 80, 90, 50],
+                      label: 'Test',
+                    ),
+                  ],
+                ),
+                animation: ChartAnimation.none(),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byType(ExportableChart), findsOneWidget);
+      expect(find.byType(FlRadarChart), findsOneWidget);
+    });
+
+    testWidgets('accepts custom exportButtonAlignment', (tester) async {
+      final exportKey = GlobalKey();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: ExportableChart(
+              exportKey: exportKey,
+              exportButtonAlignment: Alignment.topLeft,
+              child: FlBarChart(
+                data: const BarChartData(
+                  bars: [
+                    BarData(value: 30, label: 'A'),
+                    BarData(value: 60, label: 'B'),
+                  ],
+                ),
+                animation: ChartAnimation.none(),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byType(ExportableChart), findsOneWidget);
+      expect(find.text('Export'), findsOneWidget);
+    });
+
+    testWidgets('accepts onExported callback', (tester) async {
+      final exportKey = GlobalKey();
+      bool callbackCalled = false;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: ExportableChart(
+              exportKey: exportKey,
+              onExported: (bytes) => callbackCalled = true,
+              child: FlBarChart(
+                data: const BarChartData(
+                  bars: [
+                    BarData(value: 30, label: 'A'),
+                    BarData(value: 60, label: 'B'),
+                  ],
+                ),
+                animation: ChartAnimation.none(),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byType(ExportableChart), findsOneWidget);
+      // Callback registered but not yet called (no tap)
+      expect(callbackCalled, isFalse);
+    });
+
+    testWidgets('accepts custom chartName', (tester) async {
+      final exportKey = GlobalKey();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: ExportableChart(
+              exportKey: exportKey,
+              chartName: 'My Custom Chart',
+              child: FlBarChart(
+                data: const BarChartData(
+                  bars: [
+                    BarData(value: 30, label: 'A'),
+                    BarData(value: 60, label: 'B'),
+                  ],
+                ),
+                animation: ChartAnimation.none(),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byType(ExportableChart), findsOneWidget);
+    });
+
+    testWidgets('accepts custom pixelRatio', (tester) async {
+      final exportKey = GlobalKey();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: ExportableChart(
+              exportKey: exportKey,
+              pixelRatio: 2.0,
+              child: FlBarChart(
+                data: const BarChartData(
+                  bars: [
+                    BarData(value: 30, label: 'A'),
+                    BarData(value: 60, label: 'B'),
+                  ],
+                ),
+                animation: ChartAnimation.none(),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byType(ExportableChart), findsOneWidget);
+    });
+  });
+
+  // ── ChartExporter ──────────────────────────────────────────────────────────
+  group('ChartExporter', () {
+    testWidgets('toBytes returns null for invalid key', (tester) async {
+      final key = GlobalKey();
+      // Key not attached to any widget
+      final bytes = await ChartExporter.toBytes(key);
+      expect(bytes, isNull);
+    });
+
+    testWidgets('toImage returns null for invalid key', (tester) async {
+      final key = GlobalKey();
+      final image = await ChartExporter.toImage(key);
+      expect(image, isNull);
+    });
+
+    testWidgets('toBytes returns null for unattached key', (tester) async {
+      final key = GlobalKey();
+      // Key never attached to any widget — should return null gracefully
+      final bytes = await ChartExporter.toBytes(key);
+      expect(bytes, isNull);
+    });
+
+    testWidgets('toImage returns null for unattached key', (tester) async {
+      final key = GlobalKey();
+      final image = await ChartExporter.toImage(key);
+      expect(image, isNull);
+    });
+
+    testWidgets('ExportableChart key is attached after render', (tester) async {
+      final key = GlobalKey();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: ExportableChart(
+              exportKey: key,
+              showExportButton: false,
+              child: FlBarChart(
+                data: const BarChartData(
+                  bars: [
+                    BarData(value: 30, label: 'A'),
+                    BarData(value: 60, label: 'B'),
+                  ],
+                ),
+                animation: ChartAnimation.none(),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      // Key should be attached to a RenderRepaintBoundary
+      expect(key.currentContext, isNotNull);
+      expect(
+        key.currentContext!.findRenderObject(),
+        isA<RenderRepaintBoundary>(),
+      );
     });
   });
 }

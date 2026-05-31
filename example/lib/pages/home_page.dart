@@ -7,6 +7,7 @@ import 'area_charts_page.dart';
 import 'theme_demo_page.dart';
 import 'live_charts_page.dart';
 import 'annotations_page.dart';
+import 'export_demo_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -64,6 +65,10 @@ class _HomePageState extends State<HomePage> {
             icon: Icon(Icons.architecture),
             label: 'Notes',
           ),
+          NavigationDestination(
+            icon: Icon(Icons.download),
+            label: 'Export',
+          ),
         ],
       ),
       body: switch (_currentTab) {
@@ -75,6 +80,7 @@ class _HomePageState extends State<HomePage> {
         5 => const LiveChartsPage(),
         6 => const ThemeDemoPage(),
         7 => const AnnotationsPage(),
+        8 => const ExportDemoPage(),
         _ => const BarChartsPage(),
       },
     );

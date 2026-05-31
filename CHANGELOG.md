@@ -5,6 +5,34 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## 2.2.0
+
+### Added
+- 📸 `ChartExporter` — export any chart to PNG image
+  - `ChartExporter.toBytes(key)` — capture chart as `Uint8List`
+  - `ChartExporter.toImage(key)` — capture chart as `ui.Image`
+  - `ChartExporter.showPreview(context, key)` — show preview dialog
+  - Configurable `pixelRatio` for high-DPI output (default `3.0`)
+  - Configurable `backgroundColor` for export background
+- 🖼️ `ExportableChart` — wrapper widget with built-in export button
+  - Wraps any chart with `RepaintBoundary` automatically
+  - Built-in export button overlay (top-right, configurable alignment)
+  - Loading state during export with `CircularProgressIndicator`
+  - `onExported` callback for custom save/share logic
+  - `showExportButton` toggle
+  - Preview dialog shows image size in KB
+  - Works on Android, iOS, Web, Desktop
+  - Zero new dependencies — uses Flutter's built-in rendering pipeline
+
+### Use Cases Solved
+- Save chart as PNG to device gallery
+- Share chart image via native share sheet
+- Upload chart to server as image
+- Embed chart in PDF report
+- Screenshot chart for presentations
+
+---
+
 ## 2.1.0
 
 ### Added
