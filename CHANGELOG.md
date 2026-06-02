@@ -5,6 +5,37 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## 2.3.0
+
+### Added
+- 📐 `FlResponsiveChart` — wrapper that adapts any chart to screen size
+  - `small` / `medium` / `large` breakpoint configs
+  - `builder` callback receives resolved `ResponsiveChartConfig`
+  - `debugLabel` mode prints resolved breakpoint during development
+- 📱 `ChartBreakpoints` — configurable width thresholds
+  - Default: small < 360px, medium < 600px, large ≥ 600px
+  - Fully customizable via `smallMaxWidth` and `mediumMaxWidth`
+- ⚙️ `ResponsiveChartConfig` — per-breakpoint chart configuration
+  - `height` — chart height at this breakpoint
+  - `padding` — chart padding at this breakpoint
+  - `yAxisDivisions` — fewer grid divisions on small screens
+  - `showGrid` — hide grid on very small screens
+  - `labelFontSize` — smaller labels on compact screens
+  - `showDots` — hide dots on small screens for clarity
+- 🔌 `ResponsiveChartConfigX` extension — resolve helpers with fallbacks
+  - `resolveHeight()`, `resolvePadding()`, `resolveYAxisDivisions()`
+  - `resolveShowGrid()`, `resolveLabelFontSize()`, `resolveShowDots()`
+- 🏗️ `FlResponsiveBarChart` — pre-configured responsive bar chart wrapper
+- Works with all chart types via the `builder` pattern
+- Zero new dependencies
+
+### Use Cases Solved
+- Charts that look great on phones AND tablets AND desktop
+- Automatic label density reduction on small screens
+- No more manual `MediaQuery` boilerplate per chart
+
+---
+
 ## 2.2.0
 
 ### Added

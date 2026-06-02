@@ -3715,4 +3715,379 @@ void main() {
       );
     });
   });
+
+  // ── ChartBreakpoints ───────────────────────────────────────────────────────
+  group('ChartBreakpoints', () {
+    test('has correct defaults', () {
+      const bp = ChartBreakpoints();
+      expect(bp.smallMaxWidth, equals(360.0));
+      expect(bp.mediumMaxWidth, equals(600.0));
+    });
+
+    test('accepts custom values', () {
+      const bp = ChartBreakpoints(
+        smallMaxWidth: 320,
+        mediumMaxWidth: 500,
+      );
+      expect(bp.smallMaxWidth, equals(320.0));
+      expect(bp.mediumMaxWidth, equals(500.0));
+    });
+
+    test('resolves small for width below smallMaxWidth', () {
+      const bp = ChartBreakpoints();
+      expect(bp.resolve(280), equals(ScreenSize.small));
+      expect(bp.resolve(359), equals(ScreenSize.small));
+    });
+
+    test('resolves medium for width between small and medium', () {
+      const bp = ChartBreakpoints();
+      expect(bp.resolve(360), equals(ScreenSize.medium));
+      expect(bp.resolve(400), equals(ScreenSize.medium));
+      expect(bp.resolve(599), equals(ScreenSize.medium));
+    });
+
+    test('resolves large for width at or above mediumMaxWidth', () {
+      const bp = ChartBreakpoints();
+      expect(bp.resolve(600), equals(ScreenSize.large));
+      expect(bp.resolve(800), equals(ScreenSize.large));
+      expect(bp.resolve(1200), equals(ScreenSize.large));
+    });
+
+    test('custom breakpoints resolve correctly', () {
+      const bp = ChartBreakpoints(
+        smallMaxWidth: 320,
+        mediumMaxWidth: 480,
+      );
+      expect(bp.resolve(300), equals(ScreenSize.small));
+      expect(bp.resolve(350), equals(ScreenSize.medium));
+      expect(bp.resolve(500), equals(ScreenSize.large));
+    });
+  });
+
+  // ── ScreenSize enum ────────────────────────────────────────────────────────
+  group('ScreenSize', () {
+    test('has small, medium, large values', () {
+      expect(ScreenSize.values.length, equals(3));
+      expect(ScreenSize.values, contains(ScreenSize.small));
+      expect(ScreenSize.values, contains(ScreenSize.medium));
+      expect(ScreenSize.values, contains(ScreenSize.large));
+    });
+  });
+
+  // ── ResponsiveChartConfig ──────────────────────────────────────────────────
+  group('ResponsiveChartConfig', () {
+    test('all fields default to null', () {
+      const config = ResponsiveChartConfig();
+      expect(config.height, isNull);
+      expect(config.padding, isNull);
+      expect(config.yAxisDivisions, isNull);
+      expect(config.showGrid, isNull);
+      expect(config.labelFontSize, isNull);
+      expect(config.showDots, isNull);
+    });
+
+    test('accepts all custom values', () {
+      const config = ResponsiveChartConfig(
+        height: 180,
+        padding: EdgeInsets.all(8),
+        yAxisDivisions: 3,
+        showGrid: false,
+        labelFontSize: 9,
+        showDots: false,
+      );
+      expect(config.height, equals(180));
+      expect(config.padding, equals(const EdgeInsets.all(8)));
+      expect(config.yAxisDivisions, equals(3));
+      expect(config.showGrid, isFalse);
+      expect(config.labelFontSize, equals(9));
+      expect(config.showDots, isFalse);
+    });
+  });
+
+  // ── ResponsiveChartConfigX extension ──────────────────────────────────────
+  group('ResponsiveChartConfigX', () {
+    test('resolveHeight returns value when set', () {
+      const config = ResponsiveChartConfig(height: 180);
+      expect(config.resolveHeight(), equals(180));
+    });
+
+    test('resolveHeight returns fallback when null', () {
+      const config = ResponsiveChartConfig();
+      expect(config.resolveHeight(), equals(260.0));
+      expect(config.resolveHeight(300), equals(300));
+    });
+
+    test('resolvePadding returns value when set', () {
+      const config = ResponsiveChartConfig(padding: EdgeInsets.all(8));
+      expect(config.resolvePadding(), equals(const EdgeInsets.all(8)));
+    });
+
+    test('resolvePadding returns fallback when null', () {
+      const config = ResponsiveChartConfig();
+      expect(config.resolvePadding(), equals(const EdgeInsets.all(16)));
+    });
+
+    test('resolveYAxisDivisions returns value when set', () {
+      const config = ResponsiveChartConfig(yAxisDivisions: 3);
+      expect(config.resolveYAxisDivisions(), equals(3));
+    });
+
+    test('resolveYAxisDivisions returns fallback when null', () {
+      const config = ResponsiveChartConfig();
+      expect(config.resolveYAxisDivisions(), equals(5));
+      expect(config.resolveYAxisDivisions(4), equals(4));
+    });
+
+    test('resolveShowGrid returns value when set', () {
+      const config = ResponsiveChartConfig(showGrid: false);
+      expect(config.resolveShowGrid(), isFalse);
+    });
+
+    test('resolveShowGrid returns fallback when null', () {
+      const config = ResponsiveChartConfig();
+      expect(config.resolveShowGrid(), isTrue);
+      expect(config.resolveShowGrid(false), isFalse);
+    });
+
+    test('resolveLabelFontSize returns value when set', () {
+      const config = ResponsiveChartConfig(labelFontSize: 9);
+      expect(config.resolveLabelFontSize(), equals(9));
+    });
+
+    test('resolveLabelFontSize returns fallback when null', () {
+      const config = ResponsiveChartConfig();
+      expect(config.resolveLabelFontSize(), equals(11.0));
+      expect(config.resolveLabelFontSize(10), equals(10));
+    });
+
+    test('resolveShowDots returns value when set', () {
+      const config = ResponsiveChartConfig(showDots: false);
+      expect(config.resolveShowDots(), isFalse);
+    });
+
+    test('resolveShowDots returns fallback when null', () {
+      const config = ResponsiveChartConfig();
+      expect(config.resolveShowDots(), isTrue);
+      expect(config.resolveShowDots(false), isFalse);
+    });
+  });
+
+  // ── FlResponsiveChart widget ───────────────────────────────────────────────
+  group('FlResponsiveChart widget', () {
+    testWidgets('renders builder output', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlResponsiveChart(
+              small: const ResponsiveChartConfig(height: 160),
+              medium: const ResponsiveChartConfig(height: 220),
+              large: const ResponsiveChartConfig(height: 280),
+              builder: (context, config) => FlBarChart(
+                data: const BarChartData(
+                  bars: [
+                    BarData(value: 30, label: 'A'),
+                    BarData(value: 60, label: 'B'),
+                  ],
+                ),
+                height: config.resolveHeight(260),
+                animation: ChartAnimation.none(),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byType(FlResponsiveChart), findsOneWidget);
+      expect(find.byType(FlBarChart), findsOneWidget);
+    });
+
+    testWidgets('applies small config on narrow width', (tester) async {
+      double? resolvedHeight;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SizedBox(
+              width: 300,
+              child: FlResponsiveChart(
+                breakpoints: const ChartBreakpoints(
+                  smallMaxWidth: 360,
+                  mediumMaxWidth: 600,
+                ),
+                small: const ResponsiveChartConfig(height: 160),
+                medium: const ResponsiveChartConfig(height: 220),
+                large: const ResponsiveChartConfig(height: 280),
+                builder: (context, config) {
+                  resolvedHeight = config.resolveHeight(260);
+                  return FlBarChart(
+                    data: const BarChartData(
+                      bars: [
+                        BarData(value: 30, label: 'A'),
+                        BarData(value: 60, label: 'B'),
+                      ],
+                    ),
+                    height: resolvedHeight!,
+                    animation: ChartAnimation.none(),
+                  );
+                },
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(resolvedHeight, equals(160));
+    });
+
+    testWidgets('applies large config on wide width', (tester) async {
+      double? resolvedHeight;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SizedBox(
+              width: 800,
+              child: FlResponsiveChart(
+                breakpoints: const ChartBreakpoints(
+                  smallMaxWidth: 360,
+                  mediumMaxWidth: 600,
+                ),
+                small: const ResponsiveChartConfig(height: 160),
+                medium: const ResponsiveChartConfig(height: 220),
+                large: const ResponsiveChartConfig(height: 280),
+                builder: (context, config) {
+                  resolvedHeight = config.resolveHeight(260);
+                  return FlBarChart(
+                    data: const BarChartData(
+                      bars: [
+                        BarData(value: 30, label: 'A'),
+                        BarData(value: 60, label: 'B'),
+                      ],
+                    ),
+                    height: resolvedHeight!,
+                    animation: ChartAnimation.none(),
+                  );
+                },
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(resolvedHeight, equals(280));
+    });
+
+    testWidgets('works with line chart builder', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlResponsiveChart(
+              small: const ResponsiveChartConfig(
+                height: 160,
+                showDots: false,
+                showGrid: false,
+              ),
+              medium: const ResponsiveChartConfig(
+                height: 210,
+                showDots: true,
+                showGrid: true,
+              ),
+              large: const ResponsiveChartConfig(
+                height: 260,
+                showDots: true,
+                showGrid: true,
+              ),
+              builder: (context, config) => FlLineChart(
+                data: const LineChartData(
+                  lines: [
+                    LineData(
+                      points: [
+                        LinePoint(x: 0, y: 30, label: 'A'),
+                        LinePoint(x: 1, y: 60, label: 'B'),
+                      ],
+                      label: 'Test',
+                    ),
+                  ],
+                ),
+                height: config.resolveHeight(260),
+                animation: ChartAnimation.none(),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byType(FlResponsiveChart), findsOneWidget);
+      expect(find.byType(FlLineChart), findsOneWidget);
+    });
+
+    testWidgets('works with area chart builder', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlResponsiveChart(
+              small: const ResponsiveChartConfig(height: 150),
+              medium: const ResponsiveChartConfig(height: 200),
+              large: const ResponsiveChartConfig(height: 260),
+              builder: (context, config) => FlAreaChart(
+                data: const AreaChartData(
+                  series: [
+                    AreaSeries(
+                      points: [
+                        AreaPoint(x: 0, y: 30, label: 'A'),
+                        AreaPoint(x: 1, y: 60, label: 'B'),
+                      ],
+                      label: 'Test',
+                    ),
+                  ],
+                ),
+                height: config.resolveHeight(260),
+                animation: ChartAnimation.none(),
+                showLegend: false,
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byType(FlResponsiveChart), findsOneWidget);
+      expect(find.byType(FlAreaChart), findsOneWidget);
+    });
+
+    testWidgets('custom breakpoints are respected', (tester) async {
+      double? resolvedHeight;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SizedBox(
+              width: 400,
+              child: FlResponsiveChart(
+                breakpoints: const ChartBreakpoints(
+                  smallMaxWidth: 320,
+                  mediumMaxWidth: 480,
+                ),
+                small: const ResponsiveChartConfig(height: 150),
+                medium: const ResponsiveChartConfig(height: 200),
+                large: const ResponsiveChartConfig(height: 280),
+                builder: (context, config) {
+                  resolvedHeight = config.resolveHeight(260);
+                  return FlBarChart(
+                    data: const BarChartData(
+                      bars: [
+                        BarData(value: 30, label: 'A'),
+                        BarData(value: 60, label: 'B'),
+                      ],
+                    ),
+                    height: resolvedHeight!,
+                    animation: ChartAnimation.none(),
+                  );
+                },
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      // Width 400 > mediumMaxWidth 480? No, 400 < 480 → medium
+      expect(resolvedHeight, equals(200));
+    });
+  });
 }
