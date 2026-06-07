@@ -9,6 +9,7 @@ import 'live_charts_page.dart';
 import 'annotations_page.dart';
 import 'export_demo_page.dart';
 import 'responsive_demo_page.dart';
+import 'zoom_demo_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -31,6 +32,7 @@ class _HomePageState extends State<HomePage> {
     AnnotationsPage(),
     ExportDemoPage(),
     ResponsiveDemoPage(),
+    ZoomDemoPage(),
   ];
 
   static const _navItems = [
@@ -44,6 +46,7 @@ class _HomePageState extends State<HomePage> {
     _NavItem(icon: Icons.architecture, label: 'Annotations'),
     _NavItem(icon: Icons.download, label: 'Export'),
     _NavItem(icon: Icons.phonelink, label: 'Responsive'),
+    _NavItem(icon: Icons.zoom_in, label: 'Zoom & Pan'),
   ];
 
   @override
@@ -169,7 +172,7 @@ class _HomePageState extends State<HomePage> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Text(
-                    'v2.3.0',
+                    'v2.4.0',
                     style: TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w700,

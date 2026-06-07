@@ -150,67 +150,69 @@ class _FlRadarChartState extends State<FlRadarChart>
   Widget build(BuildContext context) {
     return Padding(
       padding: widget.padding,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // ── Chart canvas ────────────────────────────────────────────────
-          Container(
-            width: widget.size,
-            height: widget.size,
-            decoration: widget.decoration,
-            child: GestureDetector(
-              onTapDown: _onTapDown,
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  _chartSize = Size(
-                    constraints.maxWidth,
-                    constraints.maxHeight,
-                  );
-                  return CustomPaint(
-                    size: _chartSize,
-                    painter: RadarChartPainter(
-                      data: widget.theme != null
-                          ? RadarChartData(
-                              labels: widget.data.labels,
-                              datasets: List.generate(
-                                widget.data.datasets.length,
-                                (i) => RadarDataset(
-                                  values: widget.data.datasets[i].values,
-                                  label: widget.data.datasets[i].label,
-                                  style: RadarDatasetStyle(
-                                    color: widget.theme!.colorAt(i),
-                                    strokeWidth: widget
-                                        .data.datasets[i].style.strokeWidth,
-                                    fillOpacity: widget
-                                        .data.datasets[i].style.fillOpacity,
-                                    showDots:
-                                        widget.data.datasets[i].style.showDots,
-                                    dotRadius:
-                                        widget.data.datasets[i].style.dotRadius,
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // ── Chart canvas ────────────────────────────────────────────────
+            Container(
+              width: widget.size,
+              height: widget.size,
+              decoration: widget.decoration,
+              child: GestureDetector(
+                onTapDown: _onTapDown,
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    _chartSize = Size(
+                      constraints.maxWidth,
+                      constraints.maxHeight,
+                    );
+                    return CustomPaint(
+                      size: _chartSize,
+                      painter: RadarChartPainter(
+                        data: widget.theme != null
+                            ? RadarChartData(
+                                labels: widget.data.labels,
+                                datasets: List.generate(
+                                  widget.data.datasets.length,
+                                  (i) => RadarDataset(
+                                    values: widget.data.datasets[i].values,
+                                    label: widget.data.datasets[i].label,
+                                    style: RadarDatasetStyle(
+                                      color: widget.theme!.colorAt(i),
+                                      strokeWidth: widget
+                                          .data.datasets[i].style.strokeWidth,
+                                      fillOpacity: widget
+                                          .data.datasets[i].style.fillOpacity,
+                                      showDots: widget
+                                          .data.datasets[i].style.showDots,
+                                      dotRadius: widget
+                                          .data.datasets[i].style.dotRadius,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              maxValue: widget.data.maxValue,
-                              minValue: widget.data.minValue,
-                              gridStyle: widget.data.gridStyle,
-                              legendStyle: widget.data.legendStyle,
-                            )
-                          : widget.data,
-                      animationProgress: animationValue,
-                      selectedIndex: _selectedIndex,
-                    ),
-                  );
-                },
+                                maxValue: widget.data.maxValue,
+                                minValue: widget.data.minValue,
+                                gridStyle: widget.data.gridStyle,
+                                legendStyle: widget.data.legendStyle,
+                              )
+                            : widget.data,
+                        animationProgress: animationValue,
+                        selectedIndex: _selectedIndex,
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
-          ),
 
-          // ── Legend ──────────────────────────────────────────────────────
-          if (widget.data.legendStyle.show) ...[
-            const SizedBox(height: 12),
-            _buildLegend(),
+            // ── Legend ──────────────────────────────────────────────────────
+            if (widget.data.legendStyle.show) ...[
+              const SizedBox(height: 12),
+              _buildLegend(),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }

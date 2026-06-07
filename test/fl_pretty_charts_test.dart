@@ -4090,4 +4090,313 @@ void main() {
       expect(resolvedHeight, equals(200));
     });
   });
+
+  // ── ZoomConfig ─────────────────────────────────────────────────────────────
+  group('ZoomConfig', () {
+    test('has correct defaults', () {
+      const config = ZoomConfig();
+      expect(config.minScale, equals(1.0));
+      expect(config.maxScale, equals(4.0));
+      expect(config.enablePan, isTrue);
+      expect(config.enableZoom, isTrue);
+      expect(config.enableMouseWheelZoom, isTrue);
+      expect(config.doubleTapToReset, isTrue);
+      expect(config.mouseWheelSensitivity, equals(0.1));
+      expect(
+          config.animationDuration, equals(const Duration(milliseconds: 300)));
+      expect(config.animationCurve, equals(Curves.easeOutCubic));
+    });
+
+    test('accepts custom values', () {
+      const config = ZoomConfig(
+        minScale: 0.5,
+        maxScale: 8.0,
+        enablePan: false,
+        enableZoom: false,
+        enableMouseWheelZoom: false,
+        doubleTapToReset: false,
+        mouseWheelSensitivity: 0.2,
+        animationDuration: Duration(milliseconds: 500),
+        animationCurve: Curves.bounceOut,
+      );
+      expect(config.minScale, equals(0.5));
+      expect(config.maxScale, equals(8.0));
+      expect(config.enablePan, isFalse);
+      expect(config.enableZoom, isFalse);
+      expect(config.enableMouseWheelZoom, isFalse);
+      expect(config.doubleTapToReset, isFalse);
+      expect(config.mouseWheelSensitivity, equals(0.2));
+      expect(
+          config.animationDuration, equals(const Duration(milliseconds: 500)));
+    });
+  });
+
+  // ── FlZoomableChart widget ─────────────────────────────────────────────────
+  group('FlZoomableChart widget', () {
+    testWidgets('renders child correctly', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlZoomableChart(
+              child: FlBarChart(
+                data: const BarChartData(
+                  bars: [
+                    BarData(value: 30, label: 'A'),
+                    BarData(value: 60, label: 'B'),
+                  ],
+                ),
+                animation: ChartAnimation.none(),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byType(FlZoomableChart), findsOneWidget);
+      expect(find.byType(FlBarChart), findsOneWidget);
+    });
+
+    testWidgets('shows controls by default', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SizedBox(
+              height: 300,
+              child: FlZoomableChart(
+                child: FlBarChart(
+                  data: const BarChartData(
+                    bars: [
+                      BarData(value: 30, label: 'A'),
+                      BarData(value: 60, label: 'B'),
+                    ],
+                  ),
+                  animation: ChartAnimation.none(),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byIcon(Icons.add), findsOneWidget);
+      expect(find.byIcon(Icons.remove), findsOneWidget);
+    });
+
+    testWidgets('hides controls when showControls is false', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SizedBox(
+              height: 300,
+              child: FlZoomableChart(
+                showControls: false,
+                child: FlBarChart(
+                  data: const BarChartData(
+                    bars: [
+                      BarData(value: 30, label: 'A'),
+                      BarData(value: 60, label: 'B'),
+                    ],
+                  ),
+                  animation: ChartAnimation.none(),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byIcon(Icons.add), findsNothing);
+      expect(find.byIcon(Icons.remove), findsNothing);
+    });
+
+    testWidgets('wraps line chart correctly', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SizedBox(
+              height: 300,
+              child: FlZoomableChart(
+                child: FlLineChart(
+                  data: const LineChartData(
+                    lines: [
+                      LineData(
+                        points: [
+                          LinePoint(x: 0, y: 30, label: 'A'),
+                          LinePoint(x: 1, y: 60, label: 'B'),
+                        ],
+                        label: 'Test',
+                      ),
+                    ],
+                  ),
+                  animation: ChartAnimation.none(),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byType(FlZoomableChart), findsOneWidget);
+      expect(find.byType(FlLineChart), findsOneWidget);
+    });
+
+    testWidgets('wraps pie chart correctly', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SizedBox(
+              height: 300,
+              child: FlZoomableChart(
+                child: FlPieChart(
+                  data: const PieChartData(
+                    segments: [
+                      PieSegment(
+                          value: 40, label: 'A', color: Color(0xFF5C6BC0)),
+                      PieSegment(
+                          value: 60, label: 'B', color: Color(0xFF26A69A)),
+                    ],
+                  ),
+                  animation: ChartAnimation.none(),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byType(FlZoomableChart), findsOneWidget);
+      expect(find.byType(FlPieChart), findsOneWidget);
+    });
+
+    testWidgets('wraps radar chart correctly', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SizedBox(
+              height: 300,
+              child: FlZoomableChart(
+                child: FlRadarChart(
+                  data: const RadarChartData(
+                    labels: ['A', 'B', 'C', 'D', 'E'],
+                    datasets: [
+                      RadarDataset(
+                        values: [60, 70, 80, 90, 50],
+                        label: 'Test',
+                      ),
+                    ],
+                  ),
+                  animation: ChartAnimation.none(),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byType(FlZoomableChart), findsOneWidget);
+      expect(find.byType(FlRadarChart), findsOneWidget);
+    });
+
+    testWidgets('onScaleChanged callback is accepted', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SizedBox(
+              height: 300,
+              child: FlZoomableChart(
+                onScaleChanged: (scale) {},
+                child: FlBarChart(
+                  data: const BarChartData(
+                    bars: [
+                      BarData(value: 30, label: 'A'),
+                      BarData(value: 60, label: 'B'),
+                    ],
+                  ),
+                  animation: ChartAnimation.none(),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byType(FlZoomableChart), findsOneWidget);
+    });
+
+    testWidgets('ZoomableChartX.touchOnly renders correctly', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SizedBox(
+              height: 300,
+              child: ZoomableChartX.touchOnly(
+                child: FlBarChart(
+                  data: const BarChartData(
+                    bars: [
+                      BarData(value: 30, label: 'A'),
+                      BarData(value: 60, label: 'B'),
+                    ],
+                  ),
+                  animation: ChartAnimation.none(),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byType(FlZoomableChart), findsOneWidget);
+    });
+
+    testWidgets('ZoomableChartX.zoomOnly renders correctly', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SizedBox(
+              height: 300,
+              child: ZoomableChartX.zoomOnly(
+                child: FlBarChart(
+                  data: const BarChartData(
+                    bars: [
+                      BarData(value: 30, label: 'A'),
+                      BarData(value: 60, label: 'B'),
+                    ],
+                  ),
+                  animation: ChartAnimation.none(),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byType(FlZoomableChart), findsOneWidget);
+    });
+
+    testWidgets('renders with custom controlsAlignment', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SizedBox(
+              height: 300,
+              child: FlZoomableChart(
+                controlsAlignment: Alignment.topLeft,
+                child: FlBarChart(
+                  data: const BarChartData(
+                    bars: [
+                      BarData(value: 30, label: 'A'),
+                      BarData(value: 60, label: 'B'),
+                    ],
+                  ),
+                  animation: ChartAnimation.none(),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byType(FlZoomableChart), findsOneWidget);
+    });
+  });
 }

@@ -5,6 +5,42 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## 2.4.0
+
+### Added
+- 🔍 `FlZoomableChart` — pinch-to-zoom and pan wrapper for any chart
+  - Pinch-to-zoom — two finger pinch scales the chart in/out
+  - Pan / drag — one finger drag moves around the chart
+  - Double tap to reset — snaps back to original view instantly
+  - Mouse wheel zoom — scroll to zoom on web and desktop
+  - `+` / `-` / reset zoom control buttons overlay
+  - Scale percentage indicator on the controls
+  - Configurable min/max zoom scale
+  - Smooth animated reset via double tap or reset button
+  - `onScaleChanged` callback for external scale tracking
+  - `showControls` toggle for the button overlay
+  - Configurable `controlsAlignment`
+- ⚙️ `ZoomConfig` — zoom and pan behavior configuration
+  - `minScale` / `maxScale` — zoom limits
+  - `enablePan` / `enableZoom` — independent toggles
+  - `enableMouseWheelZoom` — web/desktop scroll zoom
+  - `doubleTapToReset` — double tap behavior
+  - `mouseWheelSensitivity` — scroll zoom speed
+  - `animationDuration` / `animationCurve` — reset animation
+- 🔌 `ZoomableChartX` extension — convenience factory methods
+  - `ZoomableChartX.touchOnly()` — mobile-only, no mouse wheel
+  - `ZoomableChartX.zoomOnly()` — zoom without pan
+- Works with all chart types — Bar, Line, Area, Pie, Radar
+- Zero new dependencies — uses Flutter built-in gestures
+
+### Use Cases Solved
+- Detailed inspection of dense data charts
+- Large datasets that need zooming to read individual values
+- Dashboard charts on desktop with mouse wheel zoom
+- Mobile charts with pinch-to-zoom interaction
+
+---
+
 ## 2.3.0
 
 ### Added

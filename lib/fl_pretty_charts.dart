@@ -94,3 +94,4 @@ export 'src/common/chart_utils.dart';
 export 'src/common/exportable_chart.dart';
 export 'src/common/legend_widget.dart';
 export 'src/common/responsive_chart.dart';
+export 'src/common/zoomable_chart.dart';

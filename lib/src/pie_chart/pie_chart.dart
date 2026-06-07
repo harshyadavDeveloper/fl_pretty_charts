@@ -131,58 +131,60 @@ class _FlPieChartState extends State<FlPieChart>
   Widget build(BuildContext context) {
     return Padding(
       padding: widget.padding,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // ── Chart canvas ────────────────────────────────────────────────
-          Container(
-            width: widget.size,
-            height: widget.size,
-            decoration: widget.decoration,
-            child: GestureDetector(
-              onTapDown: _onTapDown,
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  _chartSize =
-                      Size(constraints.maxWidth, constraints.maxHeight);
-                  return CustomPaint(
-                    size: _chartSize,
-                    painter: PieChartPainter(
-                      data: widget.theme != null
-                          ? PieChartData(
-                              segments: List.generate(
-                                widget.data.segments.length,
-                                (i) => PieSegment(
-                                  value: widget.data.segments[i].value,
-                                  label: widget.data.segments[i].label,
-                                  color: widget.theme!.colorAt(i),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // ── Chart canvas ────────────────────────────────────────────────
+            Container(
+              width: widget.size,
+              height: widget.size,
+              decoration: widget.decoration,
+              child: GestureDetector(
+                onTapDown: _onTapDown,
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    _chartSize =
+                        Size(constraints.maxWidth, constraints.maxHeight);
+                    return CustomPaint(
+                      size: _chartSize,
+                      painter: PieChartPainter(
+                        data: widget.theme != null
+                            ? PieChartData(
+                                segments: List.generate(
+                                  widget.data.segments.length,
+                                  (i) => PieSegment(
+                                    value: widget.data.segments[i].value,
+                                    label: widget.data.segments[i].label,
+                                    color: widget.theme!.colorAt(i),
+                                  ),
                                 ),
-                              ),
-                              donut: widget.data.donut,
-                              donutRadius: widget.data.donutRadius,
-                              segmentGap: widget.data.segmentGap,
-                              expandOffset: widget.data.expandOffset,
-                              legendStyle: widget.data.legendStyle,
-                              centerLabel: widget.data.centerLabel,
-                              tooltipStyle: widget.data.tooltipStyle,
-                              startAngle: widget.data.startAngle,
-                            )
-                          : widget.data,
-                      animationProgress: animationValue,
-                      selectedIndex: _selectedIndex,
-                    ),
-                  );
-                },
+                                donut: widget.data.donut,
+                                donutRadius: widget.data.donutRadius,
+                                segmentGap: widget.data.segmentGap,
+                                expandOffset: widget.data.expandOffset,
+                                legendStyle: widget.data.legendStyle,
+                                centerLabel: widget.data.centerLabel,
+                                tooltipStyle: widget.data.tooltipStyle,
+                                startAngle: widget.data.startAngle,
+                              )
+                            : widget.data,
+                        animationProgress: animationValue,
+                        selectedIndex: _selectedIndex,
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
-          ),
 
-          // ── Legend ──────────────────────────────────────────────────────
-          if (widget.data.legendStyle.show) ...[
-            const SizedBox(height: 16),
-            _buildLegend(),
+            // ── Legend ──────────────────────────────────────────────────────
+            if (widget.data.legendStyle.show) ...[
+              const SizedBox(height: 16),
+              _buildLegend(),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }
