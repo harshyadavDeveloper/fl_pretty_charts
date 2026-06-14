@@ -19,49 +19,49 @@ Bar · Line · Pie/Donut · Radar — all animated, all pure Flutter.
 
 ## 📸 Chart Examples
 
+## 📸 Chart Examples
+
 <table>
   <tr>
     <td>
-      <img src="assets/screenshots/ss1.jpg" width="150"/>
+      <img src="https://raw.githubusercontent.com/harshyadavDeveloper/fl_pretty_charts/main/assets/screenshots/ss1.jpg" width="150"/>
     </td>
     <td>
-      <img src="assets/screenshots/ss2.jpg" width="150"/>
+      <img src="https://raw.githubusercontent.com/harshyadavDeveloper/fl_pretty_charts/main/assets/screenshots/ss2.jpg" width="150"/>
     </td>
     <td>
-      <img src="assets/screenshots/ss3.jpg" width="150"/>
+      <img src="https://raw.githubusercontent.com/harshyadavDeveloper/fl_pretty_charts/main/assets/screenshots/ss3.jpg" width="150"/>
     </td>
     <td>
-      <img src="assets/screenshots/ss4.jpg" width="150"/>
-    </td>
-  </tr>
-
-  <tr>
-    <td>
-      <img src="assets/screenshots/ss5.jpg" width="150"/>
-    </td>
-    <td>
-      <img src="assets/screenshots/ss6.jpg" width="150"/>
-    </td>
-    <td>
-      <img src="assets/screenshots/ss7.jpg" width="150"/>
-    </td>
-    <td>
-      <img src="assets/screenshots/ss8.jpg" width="150"/>
+      <img src="https://raw.githubusercontent.com/harshyadavDeveloper/fl_pretty_charts/main/assets/screenshots/ss4.jpg" width="150"/>
     </td>
   </tr>
-
   <tr>
     <td>
-      <img src="assets/screenshots/ss9.jpg" width="150"/>
+      <img src="https://raw.githubusercontent.com/harshyadavDeveloper/fl_pretty_charts/main/assets/screenshots/ss5.jpg" width="150"/>
     </td>
     <td>
-      <img src="assets/screenshots/ss10.jpg" width="150"/>
+      <img src="https://raw.githubusercontent.com/harshyadavDeveloper/fl_pretty_charts/main/assets/screenshots/ss6.jpg" width="150"/>
     </td>
     <td>
-      <img src="assets/screenshots/ss11.jpg" width="150"/>
+      <img src="https://raw.githubusercontent.com/harshyadavDeveloper/fl_pretty_charts/main/assets/screenshots/ss7.jpg" width="150"/>
     </td>
     <td>
-      <img src="assets/screenshots/ss12.jpg" width="150"/>
+      <img src="https://raw.githubusercontent.com/harshyadavDeveloper/fl_pretty_charts/main/assets/screenshots/ss8.jpg" width="150"/>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <img src="https://raw.githubusercontent.com/harshyadavDeveloper/fl_pretty_charts/main/assets/screenshots/ss9.jpg" width="150"/>
+    </td>
+    <td>
+      <img src="https://raw.githubusercontent.com/harshyadavDeveloper/fl_pretty_charts/main/assets/screenshots/ss10.jpg" width="150"/>
+    </td>
+    <td>
+      <img src="https://raw.githubusercontent.com/harshyadavDeveloper/fl_pretty_charts/main/assets/screenshots/ss11.jpg" width="150"/>
+    </td>
+    <td>
+      <img src="https://raw.githubusercontent.com/harshyadavDeveloper/fl_pretty_charts/main/assets/screenshots/ss12.jpg" width="150"/>
     </td>
   </tr>
 </table>
