@@ -6,7 +6,12 @@
 [![popularity](https://img.shields.io/pub/popularity/fl_pretty_charts)](https://pub.dev/packages/fl_pretty_charts)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/harshyadavDeveloper/fl_pretty_charts/blob/main/LICENSE)
 
-A beautiful, animated Flutter charts package with zero external dependencies — built entirely with Flutter's `CustomPainter`.
+> **Why fl_pretty_charts?** fl_chart is powerful but complex.  
+> This is the chart package for developers who want something  
+> beautiful working in 5 lines — not 50.
+
+Four chart types. Zero dependencies. One import.
+Bar · Line · Pie/Donut · Radar — all animated, all pure Flutter.
 
 🌐 **[Live Demo → fl-pretty-charts.netlify.app](https://fl-pretty-charts.netlify.app)**
 
